@@ -151,3 +151,13 @@ export const logout = async () => {
     expires: new Date(0),
   });
 };
+
+export const checkSession = async (request: NextRequest) => {
+  const session = await getSession();
+  if (!session || session.expires < new Date() || !session.user) {
+    return new Error("Unauthorized");
+  }
+
+  await updateSession(request);
+  return null;
+};

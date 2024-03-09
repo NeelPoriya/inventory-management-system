@@ -1,4 +1,10 @@
-import { createItem, getAllItems, getSession, nameToModel } from "@/lib/helper";
+import {
+  checkSession,
+  createItem,
+  getAllItems,
+  getSession,
+  nameToModel,
+} from "@/lib/helper";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -6,6 +12,17 @@ export async function GET(
   { params }: { params: { name: string } }
 ) {
   try {
+    if (await checkSession(request)) {
+      return NextResponse.json(
+        {
+          error: "Unauthorized",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
+
     const session = await getSession();
     if (!session || !session.user) {
       return NextResponse.json(
@@ -40,6 +57,17 @@ export async function POST(
   { params }: { params: { name: string } }
 ) {
   try {
+    if (await checkSession(request)) {
+      return NextResponse.json(
+        {
+          error: "Unauthorized",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
+
     const session = await getSession();
     if (!session || !session.user) {
       return NextResponse.json(

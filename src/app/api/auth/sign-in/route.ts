@@ -1,4 +1,5 @@
 import { COOKIE_EXPIRATION_TIME, checkLogin, encrypt } from "@/lib/helper";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -11,10 +12,10 @@ export async function POST(request: Request) {
     const expires = new Date(Date.now() + COOKIE_EXPIRATION_TIME);
     const session = await encrypt({ user, expires });
 
-    // cookies().set("session", session, {
-    //   expires,
-    //   httpOnly: true,
-    // });
+    cookies().set("session", session, {
+      expires,
+      httpOnly: true,
+    });
 
     return NextResponse.json({ status: "success", user });
   } catch (error) {
