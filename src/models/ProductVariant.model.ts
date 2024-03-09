@@ -1,5 +1,6 @@
 import mongoose, { Model, Schema } from "mongoose";
 import Product from "@/models/Product.model";
+import Account from "./Account.model";
 
 const ProductVariantSchema = new Schema(
   {
@@ -19,6 +20,11 @@ const ProductVariantSchema = new Schema(
     product_id: {
       type: Schema.Types.ObjectId,
       ref: "Product",
+    },
+    account_id: {
+      type: Schema.Types.ObjectId,
+      ref: "Account",
+      required: true,
     },
   },
   {

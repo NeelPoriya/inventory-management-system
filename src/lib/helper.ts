@@ -41,21 +41,40 @@ export const nameToModel = {
 export const getAllItems = async (
   model: Model<any>,
   pageIndex: number,
-  pageSize: number
+  pageSize: number,
+  account_id: string
 ) => {
   await connectDB();
 
+  if (model === Account) {
+    const items = await model
+      .find({
+        _id: account_id,
+      })
+      .select("-password");
+
+    return items;
+  }
+
+  console.log(account_id);
   const items = await model
-    .find()
+    .find({
+      account_id,
+    })
     .skip(pageIndex * pageSize)
-    .limit(pageSize);
+    .limit(pageSize)
+    .populate("account_id");
   return items;
 };
 
-export const createItem = async (model: Model<any>, data: any) => {
+export const createItem = async (
+  model: Model<any>,
+  data: any,
+  account_id: string
+) => {
   await connectDB();
 
-  const item = await model.create(data);
+  const item = await model.create({ ...data, account_id });
   return item;
 };
 
@@ -94,7 +113,9 @@ export const decrypt = async (token: string): Promise<any> => {
 export const updateSession = async (request: NextRequest) => {
   try {
     const session = request.cookies.get("session")?.value;
-    if (!session) return;
+    if (!session) {
+      return NextResponse.rewrite("/auth/sign-in");
+    }
 
     // Refresh the token so it doesn't expire
     const parsed = await decrypt(session);
@@ -111,9 +132,9 @@ export const updateSession = async (request: NextRequest) => {
 
     return res;
   } catch (error) {
-    const res = NextResponse.redirect(
-      `${process.env.DEPLOYMENT_URL}/auth/sign-in`
-    );
+    console.log(error);
+
+    const res = NextResponse.redirect(new URL("/auth/sign-in", request.url));
     res.cookies.set("session", "", {
       expires: new Date(0),
     });

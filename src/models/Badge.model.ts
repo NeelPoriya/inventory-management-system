@@ -1,4 +1,5 @@
 import mongoose, { Model, Schema } from "mongoose";
+import Account from "./Account.model";
 
 const BadgeSchema = new Schema(
   {
@@ -13,6 +14,11 @@ const BadgeSchema = new Schema(
     color: {
       type: String,
       default: "#000000",
+    },
+    account_id: {
+      type: Schema.Types.ObjectId,
+      ref: "Account",
+      required: true,
     },
   },
   {

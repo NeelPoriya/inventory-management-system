@@ -1,5 +1,6 @@
 import mongoose, { Model, Schema } from "mongoose";
 import ProductVariant from "./ProductVariant.model";
+import Account from "./Account.model";
 
 const OrderSchema = new mongoose.Schema(
   {
@@ -10,6 +11,11 @@ const OrderSchema = new mongoose.Schema(
     product_variant_id: {
       type: Schema.Types.ObjectId,
       ref: "ProductVariant",
+    },
+    account_id: {
+      type: Schema.Types.ObjectId,
+      ref: "Account",
+      required: true,
     },
   },
   {

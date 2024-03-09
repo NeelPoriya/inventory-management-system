@@ -20,7 +20,7 @@ export default function SignInForm() {
       event.preventDefault();
       setIsLoading(true);
 
-      const response = await fetch("/api/sign-in", {
+      const response = await fetch("/api/auth/sign-in", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

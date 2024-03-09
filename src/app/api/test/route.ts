@@ -3,11 +3,12 @@ import chalk from "chalk";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request) {
+export async function GET(request: Request, response: NextResponse) {
   const session = await getSession();
-  console.log(chalk.red("Running api route"));
 
   console.log(chalk.green(session));
 
-  return NextResponse.json({ status: 200, session });
+  return NextResponse.json({
+    session,
+  });
 }

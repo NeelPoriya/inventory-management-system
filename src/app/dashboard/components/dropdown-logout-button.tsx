@@ -8,7 +8,7 @@ export default function DropdownLogoutButton() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("/api/logout", {
+      const response = await fetch("/api/auth/logout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

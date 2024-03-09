@@ -14,6 +14,7 @@ const ProductSchema = new Schema(
     account_id: {
       type: Schema.Types.ObjectId,
       ref: "Account",
+      required: true,
     },
   },
   {

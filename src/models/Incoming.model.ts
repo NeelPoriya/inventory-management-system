@@ -3,6 +3,7 @@ import Badge from "@/models/Badge.model";
 import Client from "@/models/Client.model";
 import ProductVariant from "@/models/ProductVariant.model";
 import Order from "./Order.model";
+import Account from "./Account.model";
 
 const IncomingSchema = new Schema(
   {
@@ -21,6 +22,11 @@ const IncomingSchema = new Schema(
     badge_id: {
       type: Schema.Types.ObjectId,
       ref: "Badge",
+    },
+    account_id: {
+      type: Schema.Types.ObjectId,
+      ref: "Account",
+      required: true,
     },
   },
   {
