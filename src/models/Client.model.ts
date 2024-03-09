@@ -1,4 +1,5 @@
 import mongoose, { Model, Schema } from "mongoose";
+import Account from "./Account.model";
 
 const ClientSchema = new Schema(
   {
@@ -10,6 +11,10 @@ const ClientSchema = new Schema(
       type: String,
       default: "",
     },
+    account_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'Account'
+    }
   },
   {
     timestamps: true,

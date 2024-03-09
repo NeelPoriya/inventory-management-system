@@ -2,6 +2,7 @@ import mongoose, { Model, Schema } from "mongoose";
 import Badge from "@/models/Badge.model";
 import Client from "@/models/Client.model";
 import ProductVariant from "@/models/ProductVariant.model";
+import Order from "./Order.model";
 
 const OutgoingSchema = new Schema(
   {
@@ -9,9 +10,9 @@ const OutgoingSchema = new Schema(
       type: Date,
       required: true,
     },
-    product_variant_id: {
+    order_id: {
       type: Schema.Types.ObjectId,
-      ref: "ProductVariant",
+      ref: "Order",
     },
     client_id: {
       type: Schema.Types.ObjectId,
