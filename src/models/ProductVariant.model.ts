@@ -1,6 +1,4 @@
 import mongoose, { Model, Schema } from "mongoose";
-import Product from "@/models/Product.model";
-import Account from "./Account.model";
 
 const ProductVariantSchema = new Schema(
   {

@@ -1,5 +1,3 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 import Account from "@/models/Account.model";
 import Badge from "@/models/Badge.model";
 import Client from "@/models/Client.model";
@@ -9,11 +7,9 @@ import Product from "@/models/Product.model";
 import ProductVariant from "@/models/ProductVariant.model";
 import { Model } from "mongoose";
 import connectDB from "./mongoose";
-import chalk from "chalk";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { redirect } from "next/navigation";
 var bcrypt = require("bcryptjs");
 
 export const COOKIE_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 30; // 1 Month
@@ -56,7 +52,6 @@ export const getAllItems = async (
     return items;
   }
 
-  console.log(account_id);
   const items = await model
     .find({
       account_id,
@@ -132,7 +127,7 @@ export const updateSession = async (request: NextRequest) => {
 
     return res;
   } catch (error) {
-    console.log(error);
+    console.error(error);
 
     const res = NextResponse.redirect(new URL("/auth/sign-in", request.url));
     res.cookies.set("session", "", {

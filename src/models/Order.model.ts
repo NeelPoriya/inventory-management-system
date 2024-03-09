@@ -1,6 +1,4 @@
 import mongoose, { Model, Schema } from "mongoose";
-import ProductVariant from "./ProductVariant.model";
-import Account from "./Account.model";
 
 const OrderSchema = new mongoose.Schema(
   {

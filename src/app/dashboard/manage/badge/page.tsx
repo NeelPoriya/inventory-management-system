@@ -50,7 +50,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Cross2Icon } from "@radix-ui/react-icons";
 import {
   Select,
   SelectContent,
@@ -63,11 +62,18 @@ import {
 
 // a constant which stores key value pairs of some beautiful colors
 const colors = {
-  "Amaranth Pink": "#D991BA",
-  Olive: "#8CAE68",
-  "Tomatic Tangerine": "#F19C79",
-  cyan: "#00FFFF",
-  magenta: "#FF00FF",
+  Blue: "#007bff",
+  Red: "#dc3545",
+  Green: "#28a745",
+  Yellow: "#ffc107",
+  Purple: "#6f42c1",
+  Orange: "#fd7e14",
+  Cyan: "#17a2b8",
+  Pink: "#e83e8c",
+  Teal: "#20c997",
+  Indigo: "#6610f2",
+  Lime: "#d4edda",
+  Brown: "#856404",
 };
 
 const getColumns = (refresh: () => void): ColumnDef<Badge>[] => {
@@ -334,6 +340,7 @@ const DialogItem = React.forwardRef((props: any, forwardedRef) => {
     </Dialog>
   );
 });
+DialogItem.displayName = "DialogItem";
 
 const AddBadgeDialog = React.forwardRef((props: any, forwardedRef) => {
   const { triggerChildren, children, refresh, ...itemProps } = props;
@@ -461,6 +468,7 @@ const AddBadgeDialog = React.forwardRef((props: any, forwardedRef) => {
     </Dialog>
   );
 });
+AddBadgeDialog.displayName = "AddBadgeDialog";
 
 export default function BadgePage() {
   const [badges, setBadges] = useState<Badge[]>([]);

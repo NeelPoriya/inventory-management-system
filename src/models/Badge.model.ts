@@ -1,5 +1,4 @@
 import mongoose, { Model, Schema } from "mongoose";
-import Account from "./Account.model";
 
 const BadgeSchema = new Schema(
   {

@@ -1,9 +1,4 @@
 import mongoose, { Model, Schema } from "mongoose";
-import Badge from "@/models/Badge.model";
-import Client from "@/models/Client.model";
-import ProductVariant from "@/models/ProductVariant.model";
-import Order from "./Order.model";
-import Account from "./Account.model";
 
 const OutgoingSchema = new Schema(
   {

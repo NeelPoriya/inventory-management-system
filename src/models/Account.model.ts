@@ -1,5 +1,5 @@
 import { hashPassword } from "@/lib/helper";
-import mongoose, { Model } from "mongoose";
+import mongoose from "mongoose";
 
 const AccountSchema = new mongoose.Schema(
   {
@@ -24,7 +24,7 @@ const AccountSchema = new mongoose.Schema(
 );
 
 // A pipeline to hash the password before saving the account
-AccountSchema.pre("save", function (next) {
+AccountSchema.pre("save", function (next: any) {
   const account = this as any;
   if (!account.isModified("password")) {
     return next();
@@ -33,7 +33,7 @@ AccountSchema.pre("save", function (next) {
   next();
 });
 
-let Account = Model<any>;
+let Account = mongoose.Model<any>;
 try {
   Account = mongoose.model("Account");
 } catch (err) {

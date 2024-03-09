@@ -1,5 +1,4 @@
 import mongoose, { Model, Schema } from "mongoose";
-import Account from "@/models/Account.model";
 
 const ProductSchema = new Schema(
   {

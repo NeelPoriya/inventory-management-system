@@ -7,7 +7,6 @@ import {
 } from "@/lib/helper";
 import connectDB from "@/lib/mongoose";
 import Account from "@/models/Account.model";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(
@@ -24,17 +23,16 @@ export async function PATCH(
 
     if (model === Account) {
       const session = await getSession();
-      console.log(session);
 
       session.user = item;
       session.expires = new Date(Date.now() + COOKIE_EXPIRATION_TIME);
 
-      cookies().set({
-        name: "session",
-        value: await encrypt(session),
-        httpOnly: true,
-        expires: session.expires,
-      });
+      // cookies().set({
+      //   name: "session",
+      //   value: await encrypt(session),
+      //   httpOnly: true,
+      //   expires: session.expires,
+      // });
     }
 
     return NextResponse.json({ message: "success", item });

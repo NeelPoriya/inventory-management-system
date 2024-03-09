@@ -6,8 +6,6 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request, response: NextResponse) {
   const session = await getSession();
 
-  console.log(chalk.green(session));
-
   return NextResponse.json({
     session,
   });
