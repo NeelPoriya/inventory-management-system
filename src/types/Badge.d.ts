@@ -5,7 +5,7 @@ export type Badge = {
   name: string;
   description: string;
   color: string;
-  createdAt: string;
-  updatedAt: string;
-  account_id: Account;
+  createdAt?: string;
+  updatedAt?: string;
+  account_id?: Account;
 };

@@ -1,4 +1,5 @@
 import mongoose, { Model, Schema } from "mongoose";
+import ProductVariant from "./ProductVariant.model";
 
 const ProductSchema = new Schema(
   {
@@ -20,6 +21,18 @@ const ProductSchema = new Schema(
     timestamps: true,
   }
 );
+
+ProductSchema.pre("find", function () {
+  this.populate("account_id");
+});
+
+ProductSchema.pre("findOneAndDelete", function () {
+  // delete all product variants having this product id
+  const product_id = this.getQuery()["_id"];
+  ProductVariant.deleteMany({ product_id })
+    .then(() => {})
+    .catch((err) => console.error("Error deleting ProductVariant", err));
+});
 
 let Product = Model<any>;
 try {

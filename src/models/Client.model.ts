@@ -20,6 +20,10 @@ const ClientSchema = new Schema(
   }
 );
 
+ClientSchema.pre("find", function () {
+  this.populate("account_id");
+});
+
 let Client = Model<any>;
 
 try {

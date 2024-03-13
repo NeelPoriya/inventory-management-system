@@ -6,9 +6,9 @@ const OutgoingSchema = new Schema(
       type: Date,
       required: true,
     },
-    order_id: {
+    product_variant_id: {
       type: Schema.Types.ObjectId,
-      ref: "Order",
+      ref: "ProductVariant",
     },
     client_id: {
       type: Schema.Types.ObjectId,
@@ -23,11 +23,22 @@ const OutgoingSchema = new Schema(
       ref: "Account",
       required: true,
     },
+    quantity: {
+      type: Number,
+      required: true,
+    },
   },
   {
     timestamps: true,
   }
 );
+
+OutgoingSchema.pre("find", function () {
+  this.populate("product_variant_id");
+  this.populate("client_id");
+  this.populate("badge_id");
+  this.populate("account_id");
+});
 
 let Outgoing = Model<any>;
 try {

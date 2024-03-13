@@ -1,4 +1,6 @@
 import mongoose, { Model, Schema } from "mongoose";
+import Product from "./Product.model";
+import Account from "./Account.model";
 
 const ProductVariantSchema = new Schema(
   {
@@ -18,6 +20,7 @@ const ProductVariantSchema = new Schema(
     product_id: {
       type: Schema.Types.ObjectId,
       ref: "Product",
+      required: true,
     },
     account_id: {
       type: Schema.Types.ObjectId,
@@ -29,6 +32,11 @@ const ProductVariantSchema = new Schema(
     timestamps: true,
   }
 );
+
+ProductVariantSchema.pre("find", function () {
+  this.populate("product_id");
+  this.populate("account_id");
+});
 
 let ProductVariant = Model<any>;
 try {

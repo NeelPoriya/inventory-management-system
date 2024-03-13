@@ -25,6 +25,10 @@ const BadgeSchema = new Schema(
   }
 );
 
+BadgeSchema.pre("find", function () {
+  this.populate("account_id");
+});
+
 let Badge = Model<any>;
 try {
   Badge = mongoose.model("Badge");

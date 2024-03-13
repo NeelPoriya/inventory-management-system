@@ -5,9 +5,14 @@ const IncomingSchema = new Schema(
       type: Date,
       required: true,
     },
-    order_id: {
+    quantity: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    product_variant_id: {
       type: Schema.Types.ObjectId,
-      ref: "Order",
+      ref: "ProductVariant",
     },
     client_id: {
       type: Schema.Types.ObjectId,
@@ -27,6 +32,12 @@ const IncomingSchema = new Schema(
     timestamps: true,
   }
 );
+
+IncomingSchema.pre("find", function () {
+  this.populate("client_id");
+  this.populate("badge_id");
+  // this.populate("account_id");
+});
 
 let Incoming = Model<any>;
 try {

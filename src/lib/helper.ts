@@ -47,7 +47,8 @@ export const getAllItems = async (
       .find({
         _id: account_id,
       })
-      .select("-password");
+      .skip(pageIndex * pageSize)
+      .limit(pageSize);
 
     return items;
   }
@@ -57,8 +58,8 @@ export const getAllItems = async (
       account_id,
     })
     .skip(pageIndex * pageSize)
-    .limit(pageSize)
-    .populate("account_id");
+    .limit(pageSize);
+
   return items;
 };
 
@@ -68,7 +69,6 @@ export const createItem = async (
   account_id: string
 ) => {
   await connectDB();
-
   const item = await model.create({ ...data, account_id });
   return item;
 };

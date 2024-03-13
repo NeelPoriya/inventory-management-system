@@ -33,6 +33,16 @@ export async function PATCH(
 
     await connectDB();
     const item = await model.findByIdAndUpdate(id, body, { new: true });
+    if (!item) {
+      return NextResponse.json(
+        {
+          error: "Item not found",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
 
     if (model === Account) {
       const session = await getSession();
@@ -73,9 +83,18 @@ export async function DELETE(
 
     const { name, id } = params;
     const model = nameToModel[name as keyof typeof nameToModel];
-
     await connectDB();
-    await model.findByIdAndDelete(id);
+    const item = await model.findByIdAndDelete(id);
+    if (!item) {
+      return NextResponse.json(
+        {
+          error: "Item not found",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
     return NextResponse.json({ message: "success" });
   } catch (error) {
     return NextResponse.json({ message: "error", error }, { status: 500 });

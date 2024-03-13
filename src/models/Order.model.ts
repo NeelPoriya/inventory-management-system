@@ -21,6 +21,11 @@ const OrderSchema = new mongoose.Schema(
   }
 );
 
+OrderSchema.pre("find", function () {
+  this.populate("product_variant_id");
+  this.populate("account_id");
+});
+
 let Order = Model<any>;
 try {
   Order = mongoose.model("Order");

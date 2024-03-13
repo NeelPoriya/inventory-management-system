@@ -6,8 +6,9 @@ export type ProductVariant = {
   name: string;
   description: string;
   price: number;
-  product_id: Product;
-  account_id: Account;
-  createdAt: string;
-  updatedAt: string;
+  product_id?: Product;
+  account_id?: Account;
+  createdAt?: string;
+  updatedAt?: string;
+  product?: Product;
 };

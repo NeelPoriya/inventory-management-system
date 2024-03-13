@@ -3,10 +3,13 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export default function SettingsProfilePage() {
+  const router = useRouter();
+
   const [userDetails, setUserDetails] = useState<{
     _id: string;
     username: string;
@@ -23,7 +26,9 @@ export default function SettingsProfilePage() {
       try {
         setLoading(true);
         const response = await fetch("/api/info/account");
+
         if (!response.ok) {
+          if (response.status === 401) router.push("/auth/sign-in");
           throw new Error("Failed to fetch user details");
         }
 
@@ -52,6 +57,7 @@ export default function SettingsProfilePage() {
       });
 
       if (!response.ok) {
+        if (response.status === 401) router.push("/auth/sign-in");
         throw new Error("Failed to update user details");
       }
 

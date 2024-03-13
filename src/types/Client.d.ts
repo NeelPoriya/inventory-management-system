@@ -4,7 +4,7 @@ export type Client = {
   _id: string;
   name: string;
   description: string;
-  account_id: Account;
-  createdAt: string;
-  updatedAt: string;
+  account_id?: Account;
+  createdAt?: string;
+  updatedAt?: string;
 };
