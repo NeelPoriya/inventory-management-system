@@ -85,28 +85,32 @@ export default function DashboardCards() {
         />
       </div>
       <div className="col-span-2">
-        <CardsMetric
-          title="Week Info"
-          description="Summary of incoming and outgoing for the week"
-          data={weekInfo}
-        />
+        {weekInfo && (
+          <CardsMetric
+            title="Week Info"
+            description="Summary of incoming and outgoing for the week"
+            data={weekInfo}
+          />
+        )}
       </div>
       <div className="col-span-4">
-        <CardsMetric
-          title={`Month Info - ${new Date().toLocaleString("default", {
-            month: "long",
-          })}`}
-          description="Summary of incoming and outgoing for the month"
-          data={monthInfo?.map((item) => ({
-            dayOfWeek:
-              item.dayOfWeek +
-              " " +
-              new Date().toLocaleString("default", { month: "long" }),
-            incoming: item.incoming,
-            outgoing: item.outgoing,
-          }))}
-          chartDivClassname="h-[300px]"
-        />
+        {monthInfo && (
+          <CardsMetric
+            title={`Month Info - ${new Date().toLocaleString("default", {
+              month: "long",
+            })}`}
+            description="Summary of incoming and outgoing for the month"
+            data={monthInfo?.map((item) => ({
+              dayOfWeek:
+                item.dayOfWeek +
+                " " +
+                new Date().toLocaleString("default", { month: "long" }),
+              incoming: item.incoming,
+              outgoing: item.outgoing,
+            }))}
+            chartDivClassname="h-[300px]"
+          />
+        )}
       </div>
     </>
   );
