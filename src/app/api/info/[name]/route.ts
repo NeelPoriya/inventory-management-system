@@ -5,6 +5,8 @@ import {
   getSession,
   nameToModel,
 } from "@/lib/helper";
+import connectDB from "@/lib/mongoose";
+import chalk from "chalk";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -57,6 +59,26 @@ export async function POST(
   { params }: { params: { name: string } }
 ) {
   try {
+    const { name } = params;
+
+    if (name === "account") {
+      await connectDB();
+      const body = await request.json();
+      const model = nameToModel[name as keyof typeof nameToModel];
+
+      const item = await model.create(body);
+      if (item) {
+        return NextResponse.json({ message: "success", item }, { status: 201 });
+      } else {
+        return NextResponse.json(
+          {
+            message: "User already exists",
+          },
+          { status: 400 }
+        );
+      }
+    }
+
     if (await checkSession(request)) {
       return NextResponse.json(
         {
@@ -78,7 +100,6 @@ export async function POST(
 
     const account_id = session.user._id;
 
-    const { name } = params;
     const body = await request.json();
     const model = nameToModel[name as keyof typeof nameToModel];
 

@@ -39,6 +39,7 @@ export async function GET(request: NextRequest) {
       {
         $match: {
           date: { $gte: startOfMonth, $lte: endOfMonth },
+          account_id: session.user._id,
         },
       },
       // Project day of month and quantity
@@ -62,6 +63,7 @@ export async function GET(request: NextRequest) {
       {
         $match: {
           date: { $gte: startOfMonth, $lte: endOfMonth },
+          account_id: session.user._id,
         },
       },
       // Project day of month and quantity

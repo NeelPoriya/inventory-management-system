@@ -3,6 +3,8 @@ import Incoming from "@/models/Incoming.model";
 import Outgoing from "@/models/Outgoing.model";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   try {
     if (await checkSession(request)) {
@@ -42,6 +44,7 @@ export async function GET(request: NextRequest) {
       {
         $match: {
           date: { $gte: startOfWeek, $lte: endOfWeek },
+          account_id: session.user._id,
         },
       },
       // Project day of week and quantity
@@ -66,6 +69,7 @@ export async function GET(request: NextRequest) {
       {
         $match: {
           date: { $gte: startOfWeek, $lte: endOfWeek },
+          account_id: session.user._id,
         },
       },
       // Project day of week and quantity
