@@ -121,7 +121,7 @@ const getColumns = (refresh: () => void): ColumnDef<Client>[] => {
       header: "Created At",
       cell: ({ row }) => (
         <div className="capitalize">
-          {new Date(row.getValue("createdAt")).toLocaleString()}
+          {new Date(row.getValue("createdAt")).toDateString()}
         </div>
       ),
     },
@@ -130,7 +130,7 @@ const getColumns = (refresh: () => void): ColumnDef<Client>[] => {
       header: "Updated At",
       cell: ({ row }) => (
         <div className="capitalize">
-          {new Date(row.getValue("updatedAt")).toLocaleString()}
+          {new Date(row.getValue("updatedAt")).toDateString()}
         </div>
       ),
     },

@@ -1,4 +1,5 @@
 import { checkSession, getSession } from "@/lib/helper";
+import connectDB from "@/lib/mongoose";
 import Incoming from "@/models/Incoming.model";
 import Outgoing from "@/models/Outgoing.model";
 import mongoose from "mongoose";
@@ -18,6 +19,8 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
+
+    await connectDB();
 
     const currentDate = new Date();
 
@@ -65,6 +68,8 @@ export async function GET(request: NextRequest) {
         },
       },
     ]);
+
+    console.log(incomingItems);
 
     // Build the aggregation pipeline
     const outgoingItems = await Outgoing.aggregate([

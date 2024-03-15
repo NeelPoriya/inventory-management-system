@@ -112,10 +112,25 @@ function ListItem({ item }: { item: OutgoingItemType }) {
 }
 
 export default function OutgoingItem({ item }: { item: Data }) {
+  const date = new Date(item._id);
+  const day = date.getDate();
+  const month = date.toLocaleString("default", { month: "short" });
+  const year = date.getFullYear();
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{new Date(item._id).toDateString()}</CardTitle>
+        <CardTitle>
+          {
+            <div className="flex gap-4 items-baseline">
+              <div className="flex flex-col gap-1">
+                <span>{`${day} ${month} ${year}`}</span>
+                <span className="text-sm">
+                  {item.items.length} item{item.items.length > 1 && "s"}
+                </span>
+              </div>
+            </div>
+          }
+        </CardTitle>
         <CardDescription className="flex flex-col gap-2 pt-4">
           {item.items.map((i) => {
             return (

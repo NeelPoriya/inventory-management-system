@@ -83,7 +83,10 @@ export default function AddIncomingDialog() {
     try {
       const response = await fetch("/api/info/incoming", {
         method: "POST",
-        body: JSON.stringify(incoming),
+        body: JSON.stringify({
+          ...incoming,
+          date: new Date(incoming.date.getTime() + 330 * 60 * 1000),
+        }),
         headers: {
           "Content-Type": "application/json",
         },

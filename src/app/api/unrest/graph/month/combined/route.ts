@@ -1,4 +1,5 @@
 import { checkSession, getSession } from "@/lib/helper";
+import connectDB from "@/lib/mongoose";
 import Incoming from "@/models/Incoming.model";
 import Outgoing from "@/models/Outgoing.model";
 import chalk from "chalk";
@@ -37,6 +38,8 @@ export async function GET(request: NextRequest) {
       0
     );
     endOfMonth.setHours(23, 59, 59, 999);
+
+    await connectDB();
 
     const accountObjectId = new mongoose.Types.ObjectId(session.user._id);
 
