@@ -35,7 +35,7 @@ export default function SignInForm() {
       const data = await response.json();
       toast.success("Logged in successfully!");
 
-      router.push("/");
+      router.push("/dashboard");
     } catch (error: any) {
       toast.error(`${error}`);
     } finally {
