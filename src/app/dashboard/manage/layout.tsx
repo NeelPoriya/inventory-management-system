@@ -1,7 +1,7 @@
 import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
-import Image from "next/image";
 import { SidebarNav } from "./components/side-nav";
+import QueryClientWrapper from "./components/query-client-wrapper";
 
 export const metadata: Metadata = {
   title: "Manage",
@@ -50,7 +50,9 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
           <aside className="-mx-4 lg:w-1/5">
             <SidebarNav items={sidebarNavItems} />
           </aside>
-          <div className="flex-1">{children}</div>
+          <div className="flex-1">
+            <QueryClientWrapper>{children}</QueryClientWrapper>
+          </div>
         </div>
       </div>
     </>

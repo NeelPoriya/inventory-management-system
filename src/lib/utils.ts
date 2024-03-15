@@ -8,3 +8,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const queryClient = new QueryClient();
+
+export const wait = async (ms: number) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+};

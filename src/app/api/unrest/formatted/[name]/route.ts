@@ -183,7 +183,7 @@ async function getModelResultGroupedByDate(
     },
     {
       $group: {
-        _id: { $dateToString: { format: "%m-%d-%Y", date: "$date" } },
+        _id: { $dateToString: { date: "$date" } },
         items: { $push: "$$ROOT" },
       },
     },

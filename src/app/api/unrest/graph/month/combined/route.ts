@@ -1,7 +1,11 @@
 import { checkSession, getSession } from "@/lib/helper";
 import Incoming from "@/models/Incoming.model";
 import Outgoing from "@/models/Outgoing.model";
+import chalk from "chalk";
+import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
@@ -34,12 +38,14 @@ export async function GET(request: NextRequest) {
     );
     endOfMonth.setHours(23, 59, 59, 999);
 
+    const accountObjectId = new mongoose.Types.ObjectId(session.user._id);
+
     const incomingItems = await Incoming.aggregate([
       // Match documents for the current month
       {
         $match: {
           date: { $gte: startOfMonth, $lte: endOfMonth },
-          account_id: session.user._id,
+          account_id: accountObjectId,
         },
       },
       // Project day of month and quantity
@@ -63,7 +69,7 @@ export async function GET(request: NextRequest) {
       {
         $match: {
           date: { $gte: startOfMonth, $lte: endOfMonth },
-          account_id: session.user._id,
+          account_id: accountObjectId,
         },
       },
       // Project day of month and quantity

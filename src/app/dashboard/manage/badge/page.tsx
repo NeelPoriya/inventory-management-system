@@ -27,7 +27,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowUpDown, ChevronDown, MoreHorizontal, Plus } from "lucide-react";
+import {
+  ArrowUpDown,
+  ChevronDown,
+  Loader,
+  MoreHorizontal,
+  Plus,
+} from "lucide-react";
 import {
   Table,
   TableBody,
@@ -59,6 +65,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useQuery } from "@tanstack/react-query";
+import { getBadge } from "@/lib/reactQueries/badge";
 
 // a constant which stores key value pairs of some beautiful colors
 const colors = {
@@ -78,28 +86,28 @@ const colors = {
 
 const getColumns = (refresh: () => void): ColumnDef<Badge>[] => {
   const columns: ColumnDef<Badge>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
+    // {
+    //   id: "select",
+    //   header: ({ table }) => (
+    //     <Checkbox
+    //       checked={
+    //         table.getIsAllPageRowsSelected() ||
+    //         (table.getIsSomePageRowsSelected() && "indeterminate")
+    //       }
+    //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+    //       aria-label="Select all"
+    //     />
+    //   ),
+    //   cell: ({ row }) => (
+    //     <Checkbox
+    //       checked={row.getIsSelected()}
+    //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+    //       aria-label="Select row"
+    //     />
+    //   ),
+    //   enableSorting: false,
+    //   enableHiding: false,
+    // },
     {
       accessorKey: "name",
       header: "Name",
@@ -210,20 +218,14 @@ const getColumns = (refresh: () => void): ColumnDef<Badge>[] => {
 };
 
 const DialogItem = React.forwardRef((props: any, forwardedRef) => {
-  const {
-    triggerChildren,
-    children,
-    refresh,
-    onSelect,
-    onOpenChange,
-    item,
-    ...itemProps
-  } = props;
+  const { triggerChildren, children, refresh, onSelect, item, ...itemProps } =
+    props;
 
   const [badgeDetails, setBadgeDetails] = useState<Badge>(item);
+  const [open, setOpen] = useState(false);
 
   return (
-    <Dialog onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <DropdownMenuItem
           {...itemProps}
@@ -260,6 +262,7 @@ const DialogItem = React.forwardRef((props: any, forwardedRef) => {
                 }
                 refresh();
                 toast.success("Badge updated successfully");
+                setOpen(false);
               } catch (error: any) {
                 console.error(error);
                 toast.error(`${error.message}`);
@@ -353,8 +356,10 @@ const AddBadgeDialog = React.forwardRef((props: any, forwardedRef) => {
     color: "",
   });
 
+  const [open, setOpen] = useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button {...itemProps} ref={forwardedRef}>
           {triggerChildren}
@@ -388,6 +393,7 @@ const AddBadgeDialog = React.forwardRef((props: any, forwardedRef) => {
                   description: "",
                   color: "",
                 });
+                setOpen(false);
                 toast.success("Badge added successfully");
               } catch (error: any) {
                 console.error(error);
@@ -471,7 +477,6 @@ const AddBadgeDialog = React.forwardRef((props: any, forwardedRef) => {
 AddBadgeDialog.displayName = "AddBadgeDialog";
 
 export default function BadgePage() {
-  const [badges, setBadges] = useState<Badge[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
@@ -485,7 +490,7 @@ export default function BadgePage() {
   });
   const [rowSelection, setRowSelection] = useState({});
   const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 1,
+    pageIndex: 0,
     pageSize: 5,
   });
   const [fetchAgain, setFetchAgain] = useState(false);
@@ -494,8 +499,13 @@ export default function BadgePage() {
     setFetchAgain((prev) => !prev);
   });
 
+  const { data: badges, isLoading } = useQuery({
+    queryKey: ["badges", fetchAgain],
+    queryFn: getBadge,
+  });
+
   const table = useReactTable({
-    data: badges,
+    data: badges ?? [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -518,23 +528,13 @@ export default function BadgePage() {
     },
   });
 
-  useEffect(() => {
-    const fetchBadges = async () => {
-      try {
-        const response = await fetch("/api/info/badge?pageSize=10000");
-        if (!response.ok) {
-          throw new Error("Failed to fetch badges");
-        }
-
-        const data = await response.json();
-        setBadges(data.items);
-      } catch (error: any) {
-        console.error(error);
-      }
-    };
-
-    fetchBadges();
-  }, [fetchAgain]);
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Loader className="animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <>

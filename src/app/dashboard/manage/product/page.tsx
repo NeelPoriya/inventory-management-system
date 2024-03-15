@@ -27,7 +27,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowUpDown, ChevronDown, MoreHorizontal, Plus } from "lucide-react";
+import {
+  ArrowUpDown,
+  ChevronDown,
+  Loader,
+  MoreHorizontal,
+  Plus,
+} from "lucide-react";
 import {
   Table,
   TableBody,
@@ -50,31 +56,33 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { useQuery } from "@tanstack/react-query";
+import { getProducts } from "@/lib/reactQueries/product";
 
 const getColumns = (refresh: () => void): ColumnDef<Product>[] => {
   const columns: ColumnDef<Product>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
+    // {
+    //   id: "select",
+    //   header: ({ table }) => (
+    //     <Checkbox
+    //       checked={
+    //         table.getIsAllPageRowsSelected() ||
+    //         (table.getIsSomePageRowsSelected() && "indeterminate")
+    //       }
+    //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+    //       aria-label="Select all"
+    //     />
+    //   ),
+    //   cell: ({ row }) => (
+    //     <Checkbox
+    //       checked={row.getIsSelected()}
+    //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+    //       aria-label="Select row"
+    //     />
+    //   ),
+    //   enableSorting: false,
+    //   enableHiding: false,
+    // },
     {
       accessorKey: "name",
       header: "Name",
@@ -173,20 +181,14 @@ const getColumns = (refresh: () => void): ColumnDef<Product>[] => {
 };
 
 const DialogItem = React.forwardRef((props: any, forwardedRef) => {
-  const {
-    triggerChildren,
-    children,
-    refresh,
-    onSelect,
-    onOpenChange,
-    item,
-    ...itemProps
-  } = props;
+  const { triggerChildren, children, refresh, onSelect, item, ...itemProps } =
+    props;
 
   const [product, setProduct] = useState<Product>(item);
+  const [open, setOpen] = useState(false);
 
   return (
-    <Dialog onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <DropdownMenuItem
           {...itemProps}
@@ -222,6 +224,7 @@ const DialogItem = React.forwardRef((props: any, forwardedRef) => {
                 }
                 refresh();
                 toast.success("Product updated successfully");
+                setOpen(false);
               } catch (error: any) {
                 console.error(error);
                 toast.error(`${error.message}`);
@@ -279,9 +282,10 @@ const AddProductDialog = React.forwardRef((props: any, forwardedRef) => {
     name: "",
     description: "",
   });
+  const [open, setOpen] = useState(false);
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button {...itemProps} ref={forwardedRef}>
           {triggerChildren}
@@ -314,6 +318,7 @@ const AddProductDialog = React.forwardRef((props: any, forwardedRef) => {
                   description: "",
                 });
                 toast.success("Product added successfully");
+                setOpen(false);
               } catch (error: any) {
                 console.error(error);
                 toast.error(`${error.message}`);
@@ -364,7 +369,7 @@ const AddProductDialog = React.forwardRef((props: any, forwardedRef) => {
 AddProductDialog.displayName = "AddProductDialog";
 
 export default function ProductPage() {
-  const [products, setProducts] = useState<Product[]>([]);
+  // const [products, setProducts] = useState<Product[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
@@ -378,7 +383,7 @@ export default function ProductPage() {
   });
   const [rowSelection, setRowSelection] = useState({});
   const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 1,
+    pageIndex: 0,
     pageSize: 5,
   });
   const [fetchAgain, setFetchAgain] = useState(false);
@@ -387,8 +392,13 @@ export default function ProductPage() {
     setFetchAgain((prev) => !prev);
   });
 
+  const { data: products, isLoading } = useQuery({
+    queryKey: ["products", fetchAgain],
+    queryFn: getProducts,
+  });
+
   const table = useReactTable({
-    data: products,
+    data: products || [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -411,23 +421,13 @@ export default function ProductPage() {
     },
   });
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch("/api/info/product?pageSize=10000");
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
-
-        const data = await response.json();
-        setProducts(data.items);
-      } catch (error: any) {
-        console.error(error);
-      }
-    };
-
-    fetchProducts();
-  }, [fetchAgain]);
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Loader className="animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <>

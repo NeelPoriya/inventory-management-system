@@ -129,7 +129,6 @@ export default function AddIncomingDialog() {
                 setIncoming((prev) => {
                   return { ...prev, date: newDate };
                 });
-                return;
               }}
             />
             <div className="h-1">&nbsp;</div>

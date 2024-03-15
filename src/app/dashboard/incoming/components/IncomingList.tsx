@@ -21,7 +21,6 @@ export default function IncomingList() {
     queryKey: ["incoming", refresh],
     queryFn: getFormattedIncoming,
     getNextPageParam: (lastPage) => {
-      console.log("Initial lastPage:", lastPage);
       if (!lastPage || !lastPage.items.metadata || !lastPage.items.metadata[0])
         return null;
       if (!lastPage.items.metadata[0].next) return null;

@@ -1,6 +1,7 @@
 import { checkSession, getSession } from "@/lib/helper";
 import Incoming from "@/models/Incoming.model";
 import Outgoing from "@/models/Outgoing.model";
+import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -38,13 +39,15 @@ export async function GET(request: NextRequest) {
       999 + (6 - endOfWeek.getDay()) * 24 * 60 * 60 * 1000
     );
 
+    const accountObjectId = new mongoose.Types.ObjectId(session.user._id);
+
     // Build the aggregation pipeline
     const incomingItems = await Incoming.aggregate([
       // Match documents for the current week
       {
         $match: {
           date: { $gte: startOfWeek, $lte: endOfWeek },
-          account_id: session.user._id,
+          account_id: accountObjectId,
         },
       },
       // Project day of week and quantity
@@ -69,7 +72,7 @@ export async function GET(request: NextRequest) {
       {
         $match: {
           date: { $gte: startOfWeek, $lte: endOfWeek },
-          account_id: session.user._id,
+          account_id: accountObjectId,
         },
       },
       // Project day of week and quantity
