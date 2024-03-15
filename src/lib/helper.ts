@@ -140,7 +140,7 @@ export const updateSession = async (request: NextRequest) => {
 
 export const getSession = async () => {
   const session = cookies().get("session")?.value;
-  if (!session) throw new Error("Unauthorized");
+  if (!session) return;
 
   const data = await decrypt(session);
   return data;
