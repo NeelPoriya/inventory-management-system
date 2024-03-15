@@ -113,7 +113,7 @@ function ListItem({ item }: { item: IncomingItemType }) {
 
 export default function IncomingItem({ item }: { item: Data }) {
   const date = new Date(item._id);
-  const day = date.getDate();
+  const day = date.getUTCDate();
   const month = date.toLocaleString("default", { month: "short" });
   const year = date.getFullYear();
   return (
