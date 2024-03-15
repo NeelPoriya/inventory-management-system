@@ -1,12 +1,7 @@
 import { Client } from "@/types/Client";
+import { get } from "../request";
 
 export const getClients: () => Promise<Client[]> = async () => {
-  const res = await fetch(`/api/info/client?pageSize=10000`);
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data from server");
-  }
-
-  const data = await res.json();
+  const data = await get(`/api/info/client?pageSize=10000`);
   return data.items as Client[];
 };

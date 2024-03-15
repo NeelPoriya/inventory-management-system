@@ -28,6 +28,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Loader } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { post } from "@/lib/request";
 
 type ModelInfoProps = {
   name: string;
@@ -52,34 +53,24 @@ export default function ModelInfo(props: ModelInfoProps) {
   const handleSearch = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`/api/unrest/formatted/${apiName}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          badgeIds:
-            selectedBadges.length === 0
-              ? undefined
-              : selectedBadges.map((badge) => badge._id),
-          clientIds:
-            selectedClients.length === 0
-              ? undefined
-              : selectedClients.map((client) => client._id),
-          productVariantIds:
-            selectedProductVariants.length === 0
-              ? undefined
-              : selectedProductVariants.map(
-                  (productvariant) => productvariant._id
-                ),
-        }),
+
+      const data = await post(`/api/unrest/formatted/${apiName}`, {
+        badgeIds:
+          selectedBadges.length === 0
+            ? undefined
+            : selectedBadges.map((badge) => badge._id),
+        clientIds:
+          selectedClients.length === 0
+            ? undefined
+            : selectedClients.map((client) => client._id),
+        productVariantIds:
+          selectedProductVariants.length === 0
+            ? undefined
+            : selectedProductVariants.map(
+                (productvariant) => productvariant._id
+              ),
       });
 
-      if (!response.ok) {
-        throw new Error("Error searching incoming info");
-      }
-
-      const data = await response.json();
       setQuantity(data?.items[0]?.totalQuantity || null);
     } catch (error) {
       console.error(error);

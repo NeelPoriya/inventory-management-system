@@ -9,6 +9,8 @@ import { useQuery } from "@tanstack/react-query";
 import ModelInfo from "./ModelInfo";
 import { getMonthInfo, getWeekInfo } from "@/lib/reactQueries/info";
 import { CardsMetric } from "./StackedBarchart";
+import { AuthenticationError } from "@/lib/errors/auth";
+import { useRouter } from "next/navigation";
 
 export type WeekInfo = {
   dayOfWeek: string;
@@ -17,10 +19,15 @@ export type WeekInfo = {
 };
 
 export default function DashboardCards() {
+  const router = useRouter();
   const {
     data: badges,
+    error: badgeError,
+    isLoading,
   }: {
     data: Badge[] | undefined;
+    error: Error | AuthenticationError | null;
+    isLoading: boolean;
   } = useQuery({
     queryKey: ["badges"],
     queryFn: getBadge,
@@ -28,8 +35,10 @@ export default function DashboardCards() {
 
   const {
     data: clients,
+    error: clientError,
   }: {
     data: Client[] | undefined;
+    error: Error | AuthenticationError | null;
   } = useQuery({
     queryKey: ["clients"],
     queryFn: getClients,
@@ -37,8 +46,10 @@ export default function DashboardCards() {
 
   const {
     data: productvariants,
+    error: productVariantError,
   }: {
     data: ProductVariant[] | undefined;
+    error: Error | AuthenticationError | null;
   } = useQuery({
     queryKey: ["product-variants"],
     queryFn: getProductVariants,
@@ -55,12 +66,27 @@ export default function DashboardCards() {
 
   const {
     data: monthInfo,
+    error: monthInfoError,
   }: {
     data: WeekInfo[] | undefined;
+    error: Error | AuthenticationError | null;
   } = useQuery({
     queryKey: ["monthInfo"],
     queryFn: getMonthInfo,
   });
+
+  if (badgeError || clientError || productVariantError || monthInfoError) {
+    if (
+      badgeError instanceof AuthenticationError ||
+      clientError instanceof AuthenticationError ||
+      productVariantError instanceof AuthenticationError ||
+      monthInfoError instanceof AuthenticationError
+    ) {
+      router.push("/auth/sign-in");
+    }
+
+    return <div>There was an error fetching the data</div>;
+  }
 
   return (
     <>
