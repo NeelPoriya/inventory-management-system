@@ -66,9 +66,11 @@ export default function AddOutgoingDialog() {
   const fetchDetails = async () => {
     try {
       const [productsVariants, clients, badges] = await Promise.all([
-        fetch("/api/info/productvariant").then((res) => res.json()),
-        fetch("/api/info/client").then((res) => res.json()),
-        fetch("/api/info/badge").then((res) => res.json()),
+        fetch("/api/info/productvariant?pageSize=10000").then((res) =>
+          res.json()
+        ),
+        fetch("/api/info/client?pageSize=10000").then((res) => res.json()),
+        fetch("/api/info/badge?pageSize=10000").then((res) => res.json()),
       ]);
       setProductsVariants(productsVariants.items);
       setClients(clients.items);
