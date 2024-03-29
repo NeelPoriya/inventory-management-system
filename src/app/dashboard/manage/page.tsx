@@ -3,7 +3,9 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { getAccountDetails } from "@/lib/reactQueries/account";
+import { Account } from "@/types/Account";
 import { useQuery } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -13,14 +15,15 @@ import { toast } from "sonner";
 export default function SettingsProfilePage() {
   const router = useRouter();
 
-  const [userDetails, setUserDetails] = useState<{
-    _id: string;
-    username: string;
-    name: string;
-  }>({
+  const [userDetails, setUserDetails] = useState<
+    Pick<Account, "name" | "username" | "_id" | "address" | "email" | "phone">
+  >({
     _id: "",
     username: "",
     name: "",
+    email: "",
+    phone: "",
+    address: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -100,6 +103,50 @@ export default function SettingsProfilePage() {
                 setUserDetails((prev) => ({
                   ...prev,
                   username: e.target.value,
+                }))
+              }
+            />
+          </div>
+          <div>
+            <Label>Email</Label>
+            <Input
+              placeholder={userDetails.email}
+              type="text"
+              id="email"
+              value={userDetails.email}
+              onChange={(e) =>
+                setUserDetails((prev) => ({
+                  ...prev,
+                  email: e.target.value,
+                }))
+              }
+            />
+          </div>
+          <div>
+            <Label>Phone</Label>
+            <Input
+              placeholder={userDetails.phone}
+              type="text"
+              id="phone"
+              value={userDetails.phone}
+              onChange={(e) =>
+                setUserDetails((prev) => ({
+                  ...prev,
+                  phone: e.target.value,
+                }))
+              }
+            />
+          </div>
+          <div>
+            <Label>Address</Label>
+            <Textarea
+              placeholder={userDetails.address}
+              id="address"
+              value={userDetails.address}
+              onChange={(e) =>
+                setUserDetails((prev) => ({
+                  ...prev,
+                  address: e.target.value,
                 }))
               }
             />

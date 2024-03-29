@@ -1,6 +1,7 @@
 import { checkSession, getSession } from "@/lib/helper";
 import connectDB from "@/lib/mongoose";
 import Incoming from "@/models/Incoming.model";
+import Order from "@/models/Order.model";
 import Outgoing from "@/models/Outgoing.model";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
@@ -45,12 +46,13 @@ export async function GET(request: NextRequest) {
     const accountObjectId = new mongoose.Types.ObjectId(session.user._id);
 
     // Build the aggregation pipeline
-    const incomingItems = await Incoming.aggregate([
+    const incomingItems = await Order.aggregate([
       // Match documents for the current week
       {
         $match: {
           date: { $gte: startOfWeek, $lte: endOfWeek },
           account_id: accountObjectId,
+          type: "inward",
         },
       },
       // Project day of week and quantity
@@ -72,12 +74,13 @@ export async function GET(request: NextRequest) {
     console.log(incomingItems);
 
     // Build the aggregation pipeline
-    const outgoingItems = await Outgoing.aggregate([
+    const outgoingItems = await Order.aggregate([
       // Match documents for the current week
       {
         $match: {
           date: { $gte: startOfWeek, $lte: endOfWeek },
           account_id: accountObjectId,
+          type: "outward",
         },
       },
       // Project day of week and quantity

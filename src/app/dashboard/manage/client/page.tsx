@@ -68,6 +68,7 @@ import {
 } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
 import { getClients } from "@/lib/reactQueries/client";
+import { Textarea } from "@/components/ui/textarea";
 
 // a constant which stores key value pairs of some beautiful colors
 const colors = {
@@ -114,6 +115,27 @@ const getColumns = (refresh: () => void): ColumnDef<Client>[] => {
       header: "Description",
       cell: ({ row }) => (
         <div className="capitalize">{row.getValue("description")}</div>
+      ),
+    },
+    {
+      accessorKey: "billing_address",
+      header: "Billing Address",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("billing_address")}</div>
+      ),
+    },
+    {
+      accessorKey: "gst_no",
+      header: "GST No",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("gst_no")}</div>
+      ),
+    },
+    {
+      accessorKey: "registration_address",
+      header: "Registration Address",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("registration_address")}</div>
       ),
     },
     {
@@ -236,6 +258,9 @@ const DialogItem = React.forwardRef((props: any, forwardedRef) => {
                   body: JSON.stringify({
                     name: clientDetails.name,
                     description: clientDetails.description,
+                    billing_address: clientDetails.billing_address,
+                    gst_no: clientDetails.gst_no,
+                    registration_address: clientDetails.registration_address,
                   }),
                 });
                 if (!response.ok) {
@@ -275,6 +300,43 @@ const DialogItem = React.forwardRef((props: any, forwardedRef) => {
                 }
               />
             </div>
+            <div>
+              <Label>Billing Address</Label>
+              <Textarea
+                value={clientDetails.billing_address}
+                onChange={(event) =>
+                  setClientDetails((prev) => ({
+                    ...prev,
+                    billing_address: event.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div>
+              <Label>GST No</Label>
+              <Input
+                value={clientDetails.gst_no}
+                onChange={(event) =>
+                  setClientDetails((prev) => ({
+                    ...prev,
+                    gst_no: event.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div>
+              <Label>Registration Address</Label>
+              <Textarea
+                value={clientDetails.registration_address}
+                onChange={(event) =>
+                  setClientDetails((prev) => ({
+                    ...prev,
+                    registration_address: event.target.value,
+                  }))
+                }
+              />
+            </div>
+
             <DialogFooter className="items-center justify-center">
               <Button type="submit">Save Changes</Button>
               {/* <DialogClose asChild>
@@ -296,10 +358,20 @@ const AddClientDialog = React.forwardRef((props: any, forwardedRef) => {
   const { triggerChildren, children, refresh, ...itemProps } = props;
 
   const [clientDetails, setClientDetails] = useState<
-    Pick<Client, "name" | "description">
+    Pick<
+      Client,
+      | "name"
+      | "description"
+      | "billing_address"
+      | "gst_no"
+      | "registration_address"
+    >
   >({
     name: "",
     description: "",
+    billing_address: "",
+    gst_no: "",
+    registration_address: "",
   });
   const [open, setOpen] = useState(false);
 
@@ -325,6 +397,9 @@ const AddClientDialog = React.forwardRef((props: any, forwardedRef) => {
                   body: JSON.stringify({
                     name: clientDetails.name,
                     description: clientDetails.description,
+                    billing_address: clientDetails.billing_address,
+                    gst_no: clientDetails.gst_no,
+                    registration_address: clientDetails.registration_address,
                   }),
                 });
                 if (!response.ok) {
@@ -365,6 +440,42 @@ const AddClientDialog = React.forwardRef((props: any, forwardedRef) => {
                   setClientDetails((prev) => ({
                     ...prev,
                     description: event.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div>
+              <Label>Billing Address</Label>
+              <Textarea
+                value={clientDetails.billing_address}
+                onChange={(event) =>
+                  setClientDetails((prev) => ({
+                    ...prev,
+                    billing_address: event.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div>
+              <Label>GST No</Label>
+              <Input
+                value={clientDetails.gst_no}
+                onChange={(event) =>
+                  setClientDetails((prev) => ({
+                    ...prev,
+                    gst_no: event.target.value,
+                  }))
+                }
+              />
+            </div>
+            <div>
+              <Label>Registration Address</Label>
+              <Textarea
+                value={clientDetails.registration_address}
+                onChange={(event) =>
+                  setClientDetails((prev) => ({
+                    ...prev,
+                    registration_address: event.target.value,
                   }))
                 }
               />

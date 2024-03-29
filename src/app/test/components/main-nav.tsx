@@ -11,8 +11,8 @@ type Link = {
 
 const links = [
   { name: "Overview", href: "/dashboard/overview" },
-  { name: "Incoming", href: "/dashboard/incoming" },
-  { name: "Outgoing", href: "/dashboard/outgoing" },
+  { name: "Inward", href: "/dashboard/inward" },
+  { name: "Outward", href: "/dashboard/outward" },
   { name: "Manage", href: "/dashboard/manage" },
 ];
 

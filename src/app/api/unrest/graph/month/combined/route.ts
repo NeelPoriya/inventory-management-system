@@ -1,6 +1,7 @@
 import { checkSession, getSession } from "@/lib/helper";
 import connectDB from "@/lib/mongoose";
 import Incoming from "@/models/Incoming.model";
+import Order from "@/models/Order.model";
 import Outgoing from "@/models/Outgoing.model";
 import chalk from "chalk";
 import mongoose from "mongoose";
@@ -43,12 +44,13 @@ export async function GET(request: NextRequest) {
 
     const accountObjectId = new mongoose.Types.ObjectId(session.user._id);
 
-    const incomingItems = await Incoming.aggregate([
+    const incomingItems = await Order.aggregate([
       // Match documents for the current month
       {
         $match: {
           date: { $gte: startOfMonth, $lte: endOfMonth },
           account_id: accountObjectId,
+          type: "inward",
         },
       },
       // Project day of month and quantity
@@ -67,12 +69,13 @@ export async function GET(request: NextRequest) {
       },
     ]);
 
-    const outgoingItems = await Outgoing.aggregate([
+    const outgoingItems = await Order.aggregate([
       // Match documents for the current month
       {
         $match: {
           date: { $gte: startOfMonth, $lte: endOfMonth },
           account_id: accountObjectId,
+          type: "outward",
         },
       },
       // Project day of month and quantity

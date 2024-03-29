@@ -7,10 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import {
-  Data,
-  OutgoingItem as OutgoingItemType,
-} from "@/types/FormattedOutgoing";
+
 import { Trash } from "lucide-react";
 import {
   AlertDialog,
@@ -26,13 +23,15 @@ import {
 import { toast } from "sonner";
 import { useContext } from "react";
 import { RefreshContext } from "@/context/refreshContext";
+import { Order } from "@/types/Order";
+import { Data } from "@/types/FormattedOrder";
 
-function DeleteItem({ item }: { item: OutgoingItemType }) {
+function DeleteItem({ item }: { item: Order }) {
   const { toggle: refresh } = useContext(RefreshContext);
 
   const deleteItem = async () => {
     try {
-      const response = await fetch(`/api/info/outgoing/${item._id}`, {
+      const response = await fetch(`/api/info/order/${item._id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -75,30 +74,30 @@ function DeleteItem({ item }: { item: OutgoingItemType }) {
   );
 }
 
-function ListItem({ item }: { item: OutgoingItemType }) {
+function ListItem({ item }: { item: Order }) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>
           <div className="flex gap-4 items-baseline">
             <div className="flex flex-col gap-1">
-              <span> {item.productvariant.product?.name}</span>
-              <span className="text-sm">({item.productvariant.name})</span>
+              <span>{item.productvariant?.product?.name}</span>
+              <span className="text-sm">({item.productvariant?.name})</span>
             </div>
             <Badge
               className="text-primary"
-              style={{ backgroundColor: item.badge.color }}
+              style={{ backgroundColor: item.badge?.color }}
             >
-              {item.badge.name}
+              {item.badge?.name}
             </Badge>
           </div>
         </CardTitle>
         <CardDescription>
           <div className="flex flex-row items-center justify-between">
-            <div>{item.client.name}</div>
+            <div>{item.client?.name}</div>
             <div className="flex gap-8 items-center">
               <div>
-                <span className={cn("text-xl font-semibold text-orange-400")}>
+                <span className={cn("text-xl font-semibold text-green-400")}>
                   {item.quantity}
                 </span>
               </div>
@@ -111,7 +110,8 @@ function ListItem({ item }: { item: OutgoingItemType }) {
   );
 }
 
-export default function OutgoingItem({ item }: { item: Data }) {
+export default function OrderItem({ item }: { item: Data }) {
+  console.log(item);
   const date = new Date(item._id);
   const day = date.getUTCDate();
   const month = date.toLocaleString("default", { month: "short" });

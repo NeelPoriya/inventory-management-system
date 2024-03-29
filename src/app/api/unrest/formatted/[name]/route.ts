@@ -3,6 +3,7 @@ import connectDB from "@/lib/mongoose";
 import Badge from "@/models/Badge.model";
 import Client from "@/models/Client.model";
 import Incoming from "@/models/Incoming.model";
+import Order from "@/models/Order.model";
 import Outgoing from "@/models/Outgoing.model";
 import ProductVariant from "@/models/ProductVariant.model";
 import chalk from "chalk";
@@ -108,10 +109,18 @@ async function getModelResultGroupedByDate(
   const accountObjectId = new mongoose.Types.ObjectId(account_id);
 
   let model;
-  if (name === "incoming") {
-    model = Incoming;
-  } else if (name === "outgoing") {
-    model = Outgoing;
+  let type;
+  // if (name === "incoming") {
+  //   model = Incoming;
+  // } else if (name === "outgoing") {
+  //   model = Outgoing;
+  // }
+  if (name === "inward") {
+    model = Order;
+    type = "inward";
+  } else if (name === "outward") {
+    model = Order;
+    type = "outward";
   } else {
     throw new Error("Invalid model name");
   }
@@ -119,7 +128,14 @@ async function getModelResultGroupedByDate(
   const items = await model.aggregate([
     {
       $match: {
-        account_id: accountObjectId,
+        $and: [
+          {
+            account_id: accountObjectId,
+          },
+          {
+            type,
+          },
+        ],
       },
     },
     // populate badge, productvariant and client
@@ -238,15 +254,13 @@ async function getQuantityInformation(
 ) {
   await connectDB();
 
-  let model;
+  let model = Order;
   console.log(chalk.red(name));
-  if (name === "incoming") {
-    model = Incoming;
-  } else if (name === "outgoing") {
-    model = Outgoing;
-  } else {
-    throw new Error("Invalid model name");
-  }
+  // if (name === "incoming") {
+  //   model = Incoming;
+  // } else if (name === "outgoing") {
+  //   model = Outgoing;
+  // }
 
   const allBadgeIds = await Badge.find({
     account_id: accountObjectId,
@@ -265,6 +279,7 @@ async function getQuantityInformation(
     {
       $match: {
         account_id: accountObjectId,
+        type: name,
       },
     },
     {

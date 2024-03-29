@@ -10,6 +10,18 @@ const ClientSchema = new Schema(
       type: String,
       default: "",
     },
+    registration_address: {
+      type: String,
+      default: "",
+    },
+    billing_address: {
+      type: String,
+      default: "",
+    },
+    gst_no: {
+      type: String,
+      default: "",
+    },
     account_id: {
       type: Schema.Types.ObjectId,
       ref: "Account",

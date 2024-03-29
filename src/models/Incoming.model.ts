@@ -27,6 +27,14 @@ const IncomingSchema = new Schema(
       ref: "Account",
       required: true,
     },
+    vehicle_no: {
+      type: String,
+      required: true,
+    },
+    drive_name: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
@@ -39,6 +47,9 @@ IncomingSchema.pre("find", function () {
   // this.populate("account_id");
 });
 
+/**
+ * @deprecated
+ */
 let Incoming = Model<any>;
 try {
   Incoming = mongoose.model("Incoming");

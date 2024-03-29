@@ -40,6 +40,9 @@ OutgoingSchema.pre("find", function () {
   this.populate("account_id");
 });
 
+/**
+ * @deprecated Use Order Instead
+ */
 let Outgoing = Model<any>;
 try {
   Outgoing = mongoose.model("Outgoing");

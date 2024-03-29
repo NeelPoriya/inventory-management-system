@@ -10,6 +10,7 @@ import connectDB from "./mongoose";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import Order from "@/models/Order.model";
 var bcrypt = require("bcryptjs");
 
 export const COOKIE_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 30; // 1 Month
@@ -32,6 +33,7 @@ export const nameToModel = {
   outgoing: Outgoing,
   product: Product,
   productvariant: ProductVariant,
+  order: Order,
 };
 
 export const getAllItems = async (

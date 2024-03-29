@@ -92,8 +92,8 @@ export default function DashboardCards() {
     <>
       <div>
         <ModelInfo
-          apiName="incoming"
-          name="Incoming"
+          apiName="inward"
+          name="Inward"
           badges={badges}
           clients={clients}
           productvariants={productvariants}
@@ -102,8 +102,8 @@ export default function DashboardCards() {
       </div>
       <div>
         <ModelInfo
-          apiName="outgoing"
-          name="Outgoing"
+          apiName="outward"
+          name="Outward"
           badges={badges}
           clients={clients}
           productvariants={productvariants}
@@ -114,7 +114,7 @@ export default function DashboardCards() {
         {weekInfo && (
           <CardsMetric
             title="Week Info"
-            description="Summary of incoming and outgoing for the week"
+            description="Summary of inward and outward for the week"
             data={weekInfo}
           />
         )}
@@ -125,7 +125,7 @@ export default function DashboardCards() {
             title={`Month Info - ${new Date().toLocaleString("default", {
               month: "long",
             })}`}
-            description="Summary of incoming and outgoing for the month"
+            description="Summary of inward and outward for the month"
             data={monthInfo?.map((item) => ({
               dayOfWeek:
                 item.dayOfWeek +

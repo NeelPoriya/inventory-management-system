@@ -1,10 +1,9 @@
 "use client";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getFormattedIncoming } from "@/lib/reactQueries/incoming";
-import { Data } from "@/types/FormattedIncoming";
+import { getFormattedOrder } from "@/lib/reactQueries/incoming";
 import InfiniteScroll from "react-infinite-scroll-component";
-import IncomingItem from "./IncomingItem";
+import OrderItem from "./OrderItem";
 import {
   Accordion,
   AccordionContent,
@@ -13,13 +12,18 @@ import {
 import { AccordionItem } from "@radix-ui/react-accordion";
 import { useContext, useState } from "react";
 import { RefreshContext } from "@/context/refreshContext";
+import { Data } from "@/types/FormattedOrder";
 
-export default function IncomingList() {
+export default function OrderList({
+  orderType,
+}: {
+  orderType: "inward" | "outward";
+}) {
   const { value: refresh } = useContext(RefreshContext);
 
   const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery({
-    queryKey: ["incoming", refresh],
-    queryFn: getFormattedIncoming,
+    queryKey: ["order", refresh],
+    queryFn: () => getFormattedOrder({ pageParam: 0, orderType }),
     getNextPageParam: (lastPage) => {
       if (!lastPage || !lastPage.items.metadata || !lastPage.items.metadata[0])
         return null;
@@ -49,7 +53,7 @@ export default function IncomingList() {
     >
       <div className="flex flex-col gap-4">
         {allItems?.map((item) => (
-          <IncomingItem key={item._id} item={item} />
+          <OrderItem key={item._id} item={item} />
         ))}
         {allItems?.length === 0 && (
           <div className="flex justify-center items-center mt-4">

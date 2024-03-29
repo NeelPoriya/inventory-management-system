@@ -1,12 +1,15 @@
 import { FormattedIncoming } from "@/types/FormattedIncoming";
+import { FormattedOrder } from "@/types/FormattedOrder";
 
-export const getFormattedIncoming: ({
+export const getFormattedOrder: ({
   pageParam,
+  orderType,
 }: {
   pageParam: number;
-}) => Promise<{ items: FormattedIncoming }> = async ({ pageParam }) => {
+  orderType: "inward" | "outward";
+}) => Promise<{ items: FormattedOrder }> = async ({ pageParam, orderType }) => {
   const res = await fetch(
-    `/api/unrest/formatted/incoming?pageIndex=${pageParam}&pageSize=10`
+    `/api/unrest/formatted/${orderType}?pageIndex=${pageParam}&pageSize=10`
   );
 
   if (!res.ok) {

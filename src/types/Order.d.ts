@@ -1,5 +1,39 @@
-import mongoose, { Model, Schema } from "mongoose";
+import { Account } from "./Account";
+import { Badge } from "./Badge";
+import { Client } from "./Client";
+import { ProductVariant } from "./ProductVariant";
 
+export type Order = {
+  _id: string;
+  date: Date;
+  product_variant_id: string;
+  productvariant?: ProductVariant;
+  badge_id: string;
+  badge?: Badge;
+  client_id: string;
+  client?: Client;
+
+  updatedAt: string;
+  createdAt: string;
+
+  quantity: number;
+  account_id: string;
+  account?: Account;
+
+  type: "inward" | "outward";
+  vehicle_no?: string;
+  driver_name?: string;
+  contact_number?: string;
+  transporter?: string;
+  mode_of_transport?: string;
+  e_way_bill_no?: string;
+
+  site_name?: string;
+  contact_person?: string;
+  contact_person_no?: string;
+};
+
+/*
 const OrderSchema = new mongoose.Schema(
   {
     date: {
@@ -32,7 +66,7 @@ const OrderSchema = new mongoose.Schema(
     vehicle_no: {
       type: String,
     },
-    driver_name: {
+    drive_name: {
       type: String,
     },
     contact_number: {
@@ -69,20 +103,4 @@ const OrderSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-OrderSchema.pre("find", function () {
-  // populate all fields
-  this.populate("product_variant_id");
-  this.populate("client_id");
-  this.populate("badge_id");
-  this.populate("account_id");
-});
-
-let Order = Model<any>;
-try {
-  Order = mongoose.model("Order");
-} catch (error) {
-  Order = mongoose.model("Order", OrderSchema);
-}
-
-export default Order;
+*/

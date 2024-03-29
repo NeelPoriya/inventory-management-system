@@ -57,7 +57,7 @@ export function CardsMetric(props: Props) {
                         <div className="grid grid-cols-2 gap-2">
                           <div className="flex flex-col">
                             <span className="text-[0.70rem] uppercase text-muted-foreground">
-                              Incoming
+                              Inward
                             </span>
                             <span className="font-bold text-green-400">
                               {payload[0].value}
@@ -65,7 +65,7 @@ export function CardsMetric(props: Props) {
                           </div>
                           <div className="flex flex-col">
                             <span className="text-[0.70rem] uppercase text-muted-foreground">
-                              Outgoing
+                              Outward
                             </span>
                             <span className="font-bold text-orange-400">
                               {payload[1].value}

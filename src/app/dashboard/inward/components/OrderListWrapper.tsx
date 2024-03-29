@@ -4,7 +4,7 @@ import { queryClient } from "@/lib/utils";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 
-export default function OutgoingListWrapper({
+export default function OrderListWrapper({
   children,
 }: {
   children: React.ReactNode;

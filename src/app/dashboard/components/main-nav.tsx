@@ -11,9 +11,14 @@ type Link = {
 
 const links = [
   { name: "Overview", href: "/dashboard/overview" },
-  { name: "Incoming", href: "/dashboard/incoming" },
-  { name: "Outgoing", href: "/dashboard/outgoing" },
+  { name: "Inward", href: "/dashboard/inward" },
+  { name: "Outward", href: "/dashboard/outward" },
+  {
+    name: "List",
+    href: "/dashboard/list",
+  },
   { name: "Manage", href: "/dashboard/manage" },
+  { name: "Invoice", href: "/dashboard/invoice" },
 ];
 
 export function MainNav({
