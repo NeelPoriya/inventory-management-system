@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-import { Trash } from "lucide-react";
+import { Trash, Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,16 +21,19 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { RefreshContext } from "@/context/refreshContext";
 import { Order } from "@/types/Order";
 import { Data } from "@/types/FormattedOrder";
+import { useTheme } from "next-themes";
 
 function DeleteItem({ item }: { item: Order }) {
   const { toggle: refresh } = useContext(RefreshContext);
+  const [loading, setLoading] = useState(false);
 
   const deleteItem = async () => {
     try {
+      setLoading(true);
       const response = await fetch(`/api/info/order/${item._id}`, {
         method: "DELETE",
         headers: {
@@ -47,14 +50,20 @@ function DeleteItem({ item }: { item: Order }) {
     } catch (error) {
       console.error(error);
       toast.error("Error deleting item");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger>
-        <Button className="bg-red-500 text-white rounded-full hover:bg-red-600">
-          <Trash size={12} />
+      <AlertDialogTrigger className="rounded-full">
+        <Button
+          size="icon"
+          disabled={loading}
+          className="bg-red-500 text-white rounded-full hover:bg-red-600"
+        >
+          <Trash2 className="h-4 w-4" />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -74,7 +83,7 @@ function DeleteItem({ item }: { item: Order }) {
   );
 }
 
-function ListItem({ item }: { item: Order }) {
+function ListItemOld({ item }: { item: Order }) {
   return (
     <Card>
       <CardHeader>
@@ -110,6 +119,46 @@ function ListItem({ item }: { item: Order }) {
   );
 }
 
+function ListItemNew({ item }: { item: Order }) {
+  const theme = useTheme();
+
+  return (
+    <div className="border border-blue-200 group rounded-lg py-4 px-4 group relative hover:bg-muted">
+      <div className="flex justify-between group-hover:text-primary">
+        <div>
+          <div className="text-lg font-semibold">
+            {item.productvariant?.product?.name}
+          </div>
+          <div className="text-sm">{item.productvariant?.name}</div>
+          <div className="mt-2 flex items-center justify-start">
+            <Badge
+              className="text-primary"
+              style={{ backgroundColor: item.badge?.color }}
+            >
+              {item.badge?.name}
+            </Badge>
+          </div>
+        </div>
+        <div className="flex items-center gap-4">
+          <div>
+            <span
+              className={cn(
+                "text-xl font-semibold group-hover:hidden text-green-500"
+              )}
+            >
+              {item.quantity}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="hidden group-hover:block absolute bottom-1/3 right-2">
+        <DeleteItem item={item} />
+      </div>
+    </div>
+  );
+}
+
 export default function OrderItem({ item }: { item: Data }) {
   console.log(item);
   const date = new Date(item._id);
@@ -120,25 +169,21 @@ export default function OrderItem({ item }: { item: Data }) {
     <Card>
       <CardHeader>
         <CardTitle>
-          {
-            <div className="flex gap-4 items-baseline">
-              <div className="flex flex-col gap-1">
-                <span>{`${day} ${month} ${year}`}</span>
-                <span className="text-sm">
-                  {item.items.length} item{item.items.length > 1 && "s"}
-                </span>
-              </div>
+          <div className="flex gap-4 items-baseline">
+            <div className="flex flex-col gap-1">
+              <span>{`${day} ${month} ${year}`}</span>
+              <span className="text-sm">
+                {item.items.length} item{item.items.length > 1 && "s"}
+              </span>
             </div>
-          }
+          </div>
         </CardTitle>
-        <CardDescription className="flex flex-col gap-2 pt-4">
-          {item.items.map((i) => {
-            return (
-              <div key={i._id}>
-                <ListItem item={i} />
-              </div>
-            );
-          })}
+        <CardDescription>
+          <div className="grid grid-cols-4 gap-4">
+            {item.items.map((i) => {
+              return <ListItemNew item={i} key={i._id} />;
+            })}
+          </div>
         </CardDescription>
       </CardHeader>
     </Card>

@@ -30,6 +30,15 @@ import {
 import { RefreshContext } from "@/context/refreshContext";
 import { Order } from "@/types/Order";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 
 export default function AddOrderDialog({
   orderType,
@@ -144,8 +153,8 @@ export default function AddOrderDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>
         <Button
           onClick={() => {
             fetchDetails();
@@ -153,247 +162,251 @@ export default function AddOrderDialog({
         >
           Add
         </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Add a new Incoming</DialogTitle>
-        </DialogHeader>
-        <DialogDescription>
+      </DrawerTrigger>
+      <DrawerContent className="p-4">
+        <DrawerHeader>
+          <DrawerTitle>Add a new Incoming</DrawerTitle>
+        </DrawerHeader>
+        <DrawerDescription>
           Please add details of the new incoming item.
-        </DialogDescription>
-        <ScrollArea className="h-[400px] rounded-md border p-4 overflow-scroll">
-          <form action={handleSubmit}>
-            <div className="flex flex-col items-start justify-start gap-2">
-              <Label htmlFor="name" className="text-right">
-                Date
-              </Label>
-              <DatePicker
-                date={new Date(order?.date || new Date())}
-                setDate={(newDate) => {
-                  setOrder((prev) => {
-                    return { ...prev, date: newDate };
-                  });
-                }}
-              />
-              <div className="h-1">&nbsp;</div>
-              <Label>Quantity</Label>
-              <Input
-                type="number"
-                value={order?.quantity}
-                min={0}
-                required={true}
-                max={1000000000}
-                onChange={(e) =>
-                  setOrder((prev) => {
-                    return { ...prev, quantity: parseInt(e.target.value) };
-                  })
-                }
-              />
-              <div className="h-1">&nbsp;</div>
-              <Label>Product Variant</Label>
+        </DrawerDescription>
+        {/* <ScrollArea className="h-[400px] rounded-md border p-4 overflow-scroll"> */}
+        <form
+          action={handleSubmit}
+          className="max-h-[50vh] overflow-x-scroll mt-4 px-4"
+        >
+          <div className="flex flex-col items-start justify-start gap-2">
+            <Label htmlFor="name" className="text-right">
+              Date
+            </Label>
+            <DatePicker
+              date={new Date(order?.date || new Date())}
+              setDate={(newDate) => {
+                setOrder((prev) => {
+                  return { ...prev, date: newDate };
+                });
+              }}
+            />
+            <div className="h-1">&nbsp;</div>
+            <Label>Quantity</Label>
+            <Input
+              type="number"
+              value={order?.quantity}
+              min={0}
+              required={true}
+              max={1000000000}
+              onChange={(e) =>
+                setOrder((prev) => {
+                  return { ...prev, quantity: parseInt(e.target.value) };
+                })
+              }
+            />
+            <div className="h-1">&nbsp;</div>
+            <Label>Product Variant</Label>
 
-              <Select
-                required={true}
-                onValueChange={(value) => {
-                  setOrder((prev) => {
-                    return {
-                      ...prev,
-                      product_variant_id: value,
-                    };
-                  });
-                }}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a product variant" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Product Variants</SelectLabel>
-                    {productsVariants?.map((productVariant) => (
-                      <SelectItem
-                        key={productVariant._id}
-                        value={productVariant._id}
-                      >
-                        {productVariant.name} -{" "}
-                        {productVariant.product_id?.name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+            <Select
+              required={true}
+              onValueChange={(value) => {
+                setOrder((prev) => {
+                  return {
+                    ...prev,
+                    product_variant_id: value,
+                  };
+                });
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a product variant" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Product Variants</SelectLabel>
+                  {productsVariants?.map((productVariant) => (
+                    <SelectItem
+                      key={productVariant._id}
+                      value={productVariant._id}
+                    >
+                      {productVariant.name} - {productVariant.product_id?.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
 
-              <div className="h-1">&nbsp;</div>
-              <Label>Clients</Label>
-              <Select
-                required={true}
-                onValueChange={(value) => {
-                  setOrder((prev) => {
-                    return {
-                      ...prev,
-                      client_id: value,
-                    };
-                  });
-                }}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a client" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Clients</SelectLabel>
-                    {clients?.map((client) => (
-                      <SelectItem key={client._id} value={client._id}>
-                        {client.name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+            <div className="h-1">&nbsp;</div>
+            <Label>Clients</Label>
+            <Select
+              required={true}
+              onValueChange={(value) => {
+                setOrder((prev) => {
+                  return {
+                    ...prev,
+                    client_id: value,
+                  };
+                });
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a client" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Clients</SelectLabel>
+                  {clients?.map((client) => (
+                    <SelectItem key={client._id} value={client._id}>
+                      {client.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
 
-              <div className="h-1">&nbsp;</div>
-              <Label>Badge</Label>
-              <Select
-                required={true}
-                onValueChange={(value) => {
-                  setOrder((prev) => {
-                    return { ...prev, badge_id: value };
-                  });
-                }}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a badge" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Badges</SelectLabel>
-                    {badges?.map((badge) => (
-                      <SelectItem key={badge._id} value={badge._id}>
-                        <div className="flex gap-2">
-                          <div
-                            className="w-max rounded-full px-2"
-                            style={{ backgroundColor: badge.color }}
-                          >
-                            <span>
-                              {badge.name[0].toUpperCase() +
-                                badge.name.substring(1)}
-                            </span>
-                          </div>
+            <div className="h-1">&nbsp;</div>
+            <Label>Badge</Label>
+            <Select
+              required={true}
+              onValueChange={(value) => {
+                setOrder((prev) => {
+                  return { ...prev, badge_id: value };
+                });
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a badge" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Badges</SelectLabel>
+                  {badges?.map((badge) => (
+                    <SelectItem key={badge._id} value={badge._id}>
+                      <div className="flex gap-2">
+                        <div
+                          className="w-max rounded-full px-2"
+                          style={{ backgroundColor: badge.color }}
+                        >
+                          <span>
+                            {badge.name[0].toUpperCase() +
+                              badge.name.substring(1)}
+                          </span>
                         </div>
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
 
-              <div className="h-1">&nbsp;</div>
-              <Label>Vehicle No</Label>
-              <Input
-                type="text"
-                value={order?.vehicle_no}
-                onChange={(e) =>
-                  setOrder((prev) => {
-                    return { ...prev, vehicle_no: e.target.value };
-                  })
-                }
-              />
-              <div className="h-1">&nbsp;</div>
-              <Label>Driver Name</Label>
-              <Input
-                type="text"
-                value={order?.driver_name}
-                onChange={(e) =>
-                  setOrder((prev) => {
-                    return { ...prev, driver_name: e.target.value };
-                  })
-                }
-              />
-              <div className="h-1">&nbsp;</div>
-              <Label>Contact Number</Label>
-              <Input
-                type="text"
-                value={order?.contact_number}
-                onChange={(e) =>
-                  setOrder((prev) => {
-                    return { ...prev, contact_number: e.target.value };
-                  })
-                }
-              />
-              <div className="h-1">&nbsp;</div>
-              <Label>Transporter</Label>
-              <Input
-                type="text"
-                value={order?.transporter}
-                onChange={(e) =>
-                  setOrder((prev) => {
-                    return { ...prev, transporter: e.target.value };
-                  })
-                }
-              />
-              <div className="h-1">&nbsp;</div>
-              <Label>Mode of Transport</Label>
-              <Input
-                type="text"
-                value={order?.mode_of_transport}
-                onChange={(e) =>
-                  setOrder((prev) => {
-                    return { ...prev, mode_of_transport: e.target.value };
-                  })
-                }
-              />
-              <div className="h-1">&nbsp;</div>
-              <Label>E-Way Bill No</Label>
-              <Input
-                type="text"
-                value={order?.e_way_bill_no}
-                onChange={(e) =>
-                  setOrder((prev) => {
-                    return { ...prev, e_way_bill_no: e.target.value };
-                  })
-                }
-              />
-              <div className="h-1">&nbsp;</div>
-              <Label>Site Name</Label>
-              <Input
-                type="text"
-                value={order?.site_name}
-                required={true}
-                onChange={(e) =>
-                  setOrder((prev) => {
-                    return { ...prev, site_name: e.target.value };
-                  })
-                }
-              />
-              <div className="h-1">&nbsp;</div>
-              <Label>Contact Person</Label>
-              <Input
-                type="text"
-                value={order?.contact_person}
-                onChange={(e) =>
-                  setOrder((prev) => {
-                    return { ...prev, contact_person: e.target.value };
-                  })
-                }
-              />
-              <div className="h-1">&nbsp;</div>
-              <Label>Contact Person No</Label>
-              <Input
-                type="text"
-                value={order?.contact_person_no}
-                onChange={(e) =>
-                  setOrder((prev) => {
-                    return { ...prev, contact_person_no: e.target.value };
-                  })
-                }
-              />
-              <div className="h-1">&nbsp;</div>
+            <div className="h-1">&nbsp;</div>
+            <Label>Vehicle No</Label>
+            <Input
+              type="text"
+              value={order?.vehicle_no}
+              onChange={(e) =>
+                setOrder((prev) => {
+                  return { ...prev, vehicle_no: e.target.value };
+                })
+              }
+            />
+            <div className="h-1">&nbsp;</div>
+            <Label>Driver Name</Label>
+            <Input
+              type="text"
+              value={order?.driver_name}
+              onChange={(e) =>
+                setOrder((prev) => {
+                  return { ...prev, driver_name: e.target.value };
+                })
+              }
+            />
+            <div className="h-1">&nbsp;</div>
+            <Label>Contact Number</Label>
+            <Input
+              type="text"
+              value={order?.contact_number}
+              onChange={(e) =>
+                setOrder((prev) => {
+                  return { ...prev, contact_number: e.target.value };
+                })
+              }
+            />
+            <div className="h-1">&nbsp;</div>
+            <Label>Transporter</Label>
+            <Input
+              type="text"
+              value={order?.transporter}
+              onChange={(e) =>
+                setOrder((prev) => {
+                  return { ...prev, transporter: e.target.value };
+                })
+              }
+            />
+            <div className="h-1">&nbsp;</div>
+            <Label>Mode of Transport</Label>
+            <Input
+              type="text"
+              value={order?.mode_of_transport}
+              onChange={(e) =>
+                setOrder((prev) => {
+                  return { ...prev, mode_of_transport: e.target.value };
+                })
+              }
+            />
+            <div className="h-1">&nbsp;</div>
+            <Label>E-Way Bill No</Label>
+            <Input
+              type="text"
+              value={order?.e_way_bill_no}
+              onChange={(e) =>
+                setOrder((prev) => {
+                  return { ...prev, e_way_bill_no: e.target.value };
+                })
+              }
+            />
+            <div className="h-1">&nbsp;</div>
+            <Label>Site Name</Label>
+            <Input
+              type="text"
+              value={order?.site_name}
+              // required={true}
+              onChange={(e) =>
+                setOrder((prev) => {
+                  return { ...prev, site_name: e.target.value };
+                })
+              }
+            />
+            <div className="h-1">&nbsp;</div>
+            <Label>Contact Person</Label>
+            <Input
+              type="text"
+              value={order?.contact_person}
+              onChange={(e) =>
+                setOrder((prev) => {
+                  return { ...prev, contact_person: e.target.value };
+                })
+              }
+            />
+            <div className="h-1">&nbsp;</div>
+            <Label>Contact Person No</Label>
+            <Input
+              type="text"
+              value={order?.contact_person_no}
+              onChange={(e) =>
+                setOrder((prev) => {
+                  return { ...prev, contact_person_no: e.target.value };
+                })
+              }
+            />
+            <div className="h-1">&nbsp;</div>
+          </div>
+          <DrawerFooter className="">
+            <Button variant={"secondary"} type="submit">
+              ADD
+            </Button>
+          </DrawerFooter>
+        </form>
 
-              <DialogFooter>
-                <Button type="submit">Add</Button>
-              </DialogFooter>
-            </div>
-          </form>
-        </ScrollArea>
-      </DialogContent>
-    </Dialog>
+        {/* </ScrollArea> */}
+      </DrawerContent>
+    </Drawer>
   );
 }

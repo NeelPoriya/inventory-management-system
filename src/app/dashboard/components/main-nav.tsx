@@ -18,7 +18,8 @@ const links = [
     href: "/dashboard/list",
   },
   { name: "Manage", href: "/dashboard/manage" },
-  { name: "Invoice", href: "/dashboard/invoice" },
+  { name: "Report", href: "/dashboard/report" },
+  // { name: "Invoice", href: "/dashboard/invoice" },
 ];
 
 export function MainNav({
@@ -27,19 +28,16 @@ export function MainNav({
 }: React.HTMLAttributes<HTMLElement>) {
   const pathname = usePathname();
   return (
-    <nav
-      className={cn("flex items-center space-x-4 lg:space-x-6", className)}
-      {...props}
-    >
+    <nav className={cn("flex items-center space-x-2", className)} {...props}>
       {links.map((link) => {
         return (
           <Link
             key={link.name}
             href={link.href}
             className={cn(
-              "text-sm font-medium transition-colors hover:text-primary",
+              "text-sm font-medium transition-colors hover:text-primary select-none hover:bg-muted px-3 py-2 rounded-lg",
               pathname.includes(link.href)
-                ? "text-primary"
+                ? "text-background bg-primary"
                 : "text-muted-foreground"
             )}
           >

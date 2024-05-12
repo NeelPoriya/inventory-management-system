@@ -46,12 +46,11 @@ const OrderSchema = new mongoose.Schema(
     },
     e_way_bill_no: {
       type: String,
-      unique: true,
     },
     // site info
     site_name: {
       type: String,
-      required: true,
+      // required: true,
     },
     contact_person: {
       type: String,
