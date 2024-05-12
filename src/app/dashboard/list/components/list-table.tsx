@@ -221,6 +221,9 @@ export default function ListTable() {
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
+        <div className="w-full flex gap-2 justify-between">
+          <h1 className="text-xl font-semibold uppercase">List</h1>
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
