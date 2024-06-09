@@ -79,10 +79,12 @@ const generatePDF = (
         { colSpan: 2, content: (totalIncoming - totalOutgoing).toString() },
       ]);
 
+      //@ts-ignore
       doc.autoTable(columns, rows, {
         startY: y + 5,
         margin: { top: 10 },
-        didParseCell: function (data) {
+
+        didParseCell: function (data: any) {
           data.cell.styles.lineWidth = 0.1;
           data.cell.styles.lineColor = "#000000";
           if (data.row.section === "head") {
@@ -119,6 +121,7 @@ const generatePDF = (
         },
       });
 
+      // @ts-ignore
       y = doc.autoTable.previous.finalY + 10;
     }
   }
@@ -240,6 +243,7 @@ export async function GET(request: NextRequest) {
     ];
 
     // sort datewise
+    // @ts-ignore
     const ordersPromise = Order.aggregate(pipeline);
     const allProductVariants = ProductVariant.find({
       account_id: userId,
