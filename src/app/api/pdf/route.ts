@@ -254,6 +254,8 @@ export async function GET(request: NextRequest) {
       allProductVariants,
     ]);
 
+    console.log(orders, productVariants);
+
     // const response = NextResponse.json(
     //   {
     //     message: "Hello",
@@ -264,6 +266,20 @@ export async function GET(request: NextRequest) {
     //     status: 200,
     //   }
     // );
+
+    if (orders.length === 0) {
+      const dummyPdf = readFileSync("public/DummyPDF.pdf");
+      const response = new Response(dummyPdf, {
+        status: 200,
+      });
+      response.headers.set("Content-Type", "application/pdf");
+      response.headers.set(
+        "Content-Disposition",
+        "inline; filename=inventory-summary.pdf"
+      );
+
+      return response;
+    }
 
     const pdf = generatePDF(orders[0], productVariants);
 

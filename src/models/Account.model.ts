@@ -58,6 +58,7 @@ AccountSchema.pre("findOneAndDelete", function () {
   const Client = mongoose.model("Client");
   const Incoming = mongoose.model("Incoming");
   const Outgoing = mongoose.model("Outgoing");
+  const Order = mongoose.model("Order");
 
   Product.deleteMany({ account_id })
     .then(() => {})
@@ -77,6 +78,9 @@ AccountSchema.pre("findOneAndDelete", function () {
   Outgoing.deleteMany({ account_id })
     .then(() => {})
     .catch((err) => console.error("Error deleting Outgoing", err));
+  Order.deleteMany({ account_id })
+    .then(() => {})
+    .catch((err) => console.error("Error deleting Order", err));
 });
 
 let Account = mongoose.Model<any>;

@@ -36,6 +36,17 @@ ClientSchema.pre("find", function () {
   this.populate("account_id");
 });
 
+ClientSchema.pre("findOneAndDelete", function () {
+  // delete all clients having this client id
+  const client_id = this.getQuery()["_id"];
+
+  const Order = mongoose.model("Order");
+  // set client_id to null for all orders having this client_id
+  Order.updateMany({ client_id }, { client_id: null })
+    .then(() => {})
+    .catch((err) => console.error("Error deleting Client", err));
+});
+
 let Client = Model<any>;
 
 try {

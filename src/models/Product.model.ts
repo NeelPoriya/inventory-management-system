@@ -26,12 +26,21 @@ ProductSchema.pre("find", function () {
   this.populate("account_id");
 });
 
-ProductSchema.pre("findOneAndDelete", function () {
+ProductSchema.pre("findOneAndDelete", async function () {
   // delete all product variants having this product id
   const product_id = this.getQuery()["_id"];
-  ProductVariant.deleteMany({ product_id })
-    .then(() => {})
-    .catch((err) => console.error("Error deleting ProductVariant", err));
+
+  const ProductVariant = mongoose.model("ProductVariant");
+  const productVariants = await ProductVariant.find({ product_id });
+  const deletedProductVariants = await ProductVariant.deleteMany({
+    product_id,
+  });
+
+  // delete all orders having this product variant id
+  const Order = mongoose.model("Order");
+  const deletedOrders = await Order.deleteMany({
+    product_variant_id: { $in: productVariants },
+  });
 });
 
 let Product = Model<any>;

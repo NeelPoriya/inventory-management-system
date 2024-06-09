@@ -38,6 +38,17 @@ ProductVariantSchema.pre("find", function () {
   this.populate("account_id");
 });
 
+ProductVariantSchema.pre("findOneAndDelete", function () {
+  console.log("pre findOneAndDelete for ProductVariant");
+  // delete all product variants having this product variant id
+  const product_variant_id = this.getQuery()["_id"];
+  const Order = mongoose.model("Order");
+  // delete all orders having this product variant id
+  Order.deleteMany({ product_variant_id })
+    .then(() => {})
+    .catch((err) => console.error("Error deleting Order", err));
+});
+
 let ProductVariant = Model<any>;
 try {
   ProductVariant = mongoose.model("ProductVariant");

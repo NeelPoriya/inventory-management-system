@@ -125,7 +125,6 @@ function ListItemOld({ item }: { item: Order }) {
 
 function ListItemNew({ item }: { item: Order }) {
   const theme = useTheme();
-
   return (
     <div className="border border-blue-200 group rounded-lg py-4 px-4 group relative hover:bg-muted">
       <div className="flex justify-between group-hover:text-primary">
@@ -135,12 +134,14 @@ function ListItemNew({ item }: { item: Order }) {
           </div>
           <div className="text-sm">{item.productvariant?.name}</div>
           <div className="mt-2 flex items-center justify-start">
-            <Badge
-              className="text-primary"
-              style={{ backgroundColor: item.badge?.color }}
-            >
-              {item.badge?.name}
-            </Badge>
+            {item.badge && (
+              <Badge
+                className="text-primary"
+                style={{ backgroundColor: item.badge?.color }}
+              >
+                {item.badge?.name}
+              </Badge>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-4">
@@ -164,7 +165,6 @@ function ListItemNew({ item }: { item: Order }) {
 }
 
 export default function OrderItem({ item }: { item: Data }) {
-  console.log(item);
   const date = new Date(item._id);
   const day = date.getUTCDate();
   const month = date.toLocaleString("default", { month: "short" });
