@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn, queryClient } from "@/lib/utils";
 
 import { Trash, Trash2 } from "lucide-react";
 import {
@@ -22,13 +22,17 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { useContext, useState } from "react";
-import { RefreshContext } from "@/context/refreshContext";
 import { Order } from "@/types/Order";
 import { Data } from "@/types/FormattedOrder";
 import { useTheme } from "next-themes";
 
+const refresh = () => {
+  queryClient.invalidateQueries({
+    queryKey: ["dashboard-order"],
+  });
+};
+
 function DeleteItem({ item }: { item: Order }) {
-  const { toggle: refresh } = useContext(RefreshContext);
   const [loading, setLoading] = useState(false);
 
   const deleteItem = async () => {

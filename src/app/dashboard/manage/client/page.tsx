@@ -69,6 +69,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { getClients } from "@/lib/reactQueries/client";
 import { Textarea } from "@/components/ui/textarea";
+import { queryClient } from "@/lib/utils";
 
 // a constant which stores key value pairs of some beautiful colors
 const colors = {
@@ -79,7 +80,13 @@ const colors = {
   magenta: "#FF00FF",
 };
 
-const getColumns = (refresh: () => void): ColumnDef<Client>[] => {
+const refresh = () => {
+  queryClient.invalidateQueries({
+    queryKey: ["dashboard-manage-client"],
+  });
+};
+
+const getColumns = (): ColumnDef<Client>[] => {
   const columns: ColumnDef<Client>[] = [
     // {
     //   id: "select",
@@ -515,18 +522,15 @@ export default function ClientPage() {
     pageIndex: 0,
     pageSize: 5,
   });
-  const [fetchAgain, setFetchAgain] = useState(false);
 
-  const columns = getColumns(() => {
-    setFetchAgain((prev) => !prev);
-  });
+  const columns = getColumns();
 
   const {
     data: clients,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["clients", fetchAgain],
+    queryKey: ["dashboard-manage-client"],
     queryFn: getClients,
   });
 
@@ -543,7 +547,7 @@ export default function ClientPage() {
     onRowSelectionChange: setRowSelection,
     onPaginationChange: setPagination,
     onStateChange: (newState) => {
-      setFetchAgain((prev) => !prev);
+      refresh();
     },
     state: {
       sorting,
@@ -582,7 +586,7 @@ export default function ClientPage() {
                   <span>Add Client</span>
                 </>
               }
-              refresh={() => setFetchAgain((prev) => !prev)}
+              refresh={refresh}
             >
               <DialogTitle className="DialogTitle">Add Client</DialogTitle>
               <DialogDescription className="DialogDescription">

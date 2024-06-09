@@ -27,7 +27,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { RefreshContext } from "@/context/refreshContext";
 import { Order } from "@/types/Order";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import {
@@ -39,14 +38,19 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { queryClient } from "@/lib/utils";
+
+const refresh = () => {
+  queryClient.invalidateQueries({
+    queryKey: ["dashboard-order"],
+  });
+};
 
 export default function AddOrderDialog({
   orderType,
 }: {
   orderType: "inward" | "outward";
 }) {
-  const { toggle: refresh } = useContext(RefreshContext);
-
   const [productsVariants, setProductsVariants] = useState<ProductVariant[]>();
   const [clients, setClients] = useState<Client[]>();
   const [badges, setBadges] = useState<Badge[]>();

@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/accordion";
 import { AccordionItem } from "@radix-ui/react-accordion";
 import { useContext, useState } from "react";
-import { RefreshContext } from "@/context/refreshContext";
 import { Data } from "@/types/FormattedOrder";
 
 export default function OrderList({
@@ -19,10 +18,8 @@ export default function OrderList({
 }: {
   orderType: "inward" | "outward";
 }) {
-  const { value: refresh } = useContext(RefreshContext);
-
   const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery({
-    queryKey: ["order", refresh],
+    queryKey: ["dashboard-order"],
     queryFn: () => getFormattedOrder({ pageParam: 0, orderType }),
     getNextPageParam: (lastPage) => {
       if (!lastPage || !lastPage.items.metadata || !lastPage.items.metadata[0])

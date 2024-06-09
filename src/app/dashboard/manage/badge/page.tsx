@@ -67,6 +67,7 @@ import {
 } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
 import { getBadge } from "@/lib/reactQueries/badge";
+import { queryClient } from "@/lib/utils";
 
 // a constant which stores key value pairs of some beautiful colors
 const colors = {
@@ -84,7 +85,13 @@ const colors = {
   Brown: "#856404",
 };
 
-const getColumns = (refresh: () => void): ColumnDef<Badge>[] => {
+const refresh = () => {
+  queryClient.invalidateQueries({
+    queryKey: ["dashboard-manage-badges"],
+  });
+};
+
+const getColumns = (): ColumnDef<Badge>[] => {
   const columns: ColumnDef<Badge>[] = [
     // {
     //   id: "select",
@@ -197,6 +204,7 @@ const getColumns = (refresh: () => void): ColumnDef<Badge>[] => {
                     if (!response.ok) {
                       throw new Error("Failed to delete badge");
                     }
+
                     refresh();
                     toast.success("Badge deleted successfully");
                   } catch (error: any) {
@@ -493,14 +501,11 @@ export default function BadgePage() {
     pageIndex: 0,
     pageSize: 5,
   });
-  const [fetchAgain, setFetchAgain] = useState(false);
 
-  const columns = getColumns(() => {
-    setFetchAgain((prev) => !prev);
-  });
+  const columns = getColumns();
 
   const { data: badges, isLoading } = useQuery({
-    queryKey: ["badges", fetchAgain],
+    queryKey: ["dashboard-manage-badges"],
     queryFn: getBadge,
   });
 
@@ -517,7 +522,7 @@ export default function BadgePage() {
     onRowSelectionChange: setRowSelection,
     onPaginationChange: setPagination,
     onStateChange: (newState) => {
-      setFetchAgain((prev) => !prev);
+      refresh();
     },
     state: {
       sorting,
@@ -556,7 +561,7 @@ export default function BadgePage() {
                   <span>Add Badge</span>
                 </>
               }
-              refresh={() => setFetchAgain((prev) => !prev)}
+              refresh={refresh}
             >
               <DialogTitle className="DialogTitle">Add Badge</DialogTitle>
               <DialogDescription className="DialogDescription">

@@ -58,8 +58,15 @@ import {
 import { Label } from "@/components/ui/label";
 import { useQuery } from "@tanstack/react-query";
 import { getProducts } from "@/lib/reactQueries/product";
+import { queryClient } from "@/lib/utils";
 
-const getColumns = (refresh: () => void): ColumnDef<Product>[] => {
+const refresh = () => {
+  queryClient.invalidateQueries({
+    queryKey: ["dashboard-manage-products"],
+  });
+};
+
+const getColumns = (): ColumnDef<Product>[] => {
   const columns: ColumnDef<Product>[] = [
     // {
     //   id: "select",
@@ -386,14 +393,11 @@ export default function ProductPage() {
     pageIndex: 0,
     pageSize: 5,
   });
-  const [fetchAgain, setFetchAgain] = useState(false);
 
-  const columns = getColumns(() => {
-    setFetchAgain((prev) => !prev);
-  });
+  const columns = getColumns();
 
   const { data: products, isLoading } = useQuery({
-    queryKey: ["products", fetchAgain],
+    queryKey: ["dashboard-manage-products"],
     queryFn: getProducts,
   });
 
@@ -410,7 +414,7 @@ export default function ProductPage() {
     onRowSelectionChange: setRowSelection,
     onPaginationChange: setPagination,
     onStateChange: (newState) => {
-      setFetchAgain((prev) => !prev);
+      refresh();
     },
     state: {
       sorting,
@@ -449,7 +453,7 @@ export default function ProductPage() {
                   <span>Add Product</span>
                 </>
               }
-              refresh={() => setFetchAgain((prev) => !prev)}
+              refresh={refresh}
             >
               <DialogTitle className="DialogTitle">Add Product</DialogTitle>
               <DialogDescription className="DialogDescription">

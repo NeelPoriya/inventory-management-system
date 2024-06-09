@@ -64,11 +64,15 @@ import {
 } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
 import { getProductVariants } from "@/lib/reactQueries/productvariant";
+import { queryClient } from "@/lib/utils";
 
-const getColumns = (
-  refresh: () => void,
-  allProducts: Product[]
-): ColumnDef<ProductVariant>[] => {
+const refresh = () => {
+  queryClient.invalidateQueries({
+    queryKey: ["dashboard-manage-productvariants"],
+  });
+};
+
+const getColumns = (allProducts: Product[]): ColumnDef<ProductVariant>[] => {
   const columns: ColumnDef<ProductVariant>[] = [
     // {
     //   id: "select",
@@ -512,15 +516,12 @@ export default function ProductVariantPage() {
     pageIndex: 0,
     pageSize: 5,
   });
-  const [fetchAgain, setFetchAgain] = useState(false);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
 
-  const columns = getColumns(() => {
-    setFetchAgain((prev) => !prev);
-  }, allProducts);
+  const columns = getColumns(allProducts);
 
   const { data: productvariants, isLoading } = useQuery({
-    queryKey: ["productvariants", fetchAgain],
+    queryKey: ["dashboard-manage-productvariants"],
     queryFn: getProductVariants,
   });
 
@@ -537,7 +538,7 @@ export default function ProductVariantPage() {
     onRowSelectionChange: setRowSelection,
     onPaginationChange: setPagination,
     onStateChange: (newState) => {
-      setFetchAgain((prev) => !prev);
+      refresh();
     },
     state: {
       sorting,
@@ -594,7 +595,7 @@ export default function ProductVariantPage() {
                   <span>Add Product</span>
                 </>
               }
-              refresh={() => setFetchAgain((prev) => !prev)}
+              refresh={refresh}
               products={allProducts}
             >
               <DialogTitle className="DialogTitle">Add Product</DialogTitle>
