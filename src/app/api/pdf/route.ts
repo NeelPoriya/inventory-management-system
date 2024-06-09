@@ -49,12 +49,10 @@ const generatePDF = (
 
   for (const [key, value] of Object.entries(orders)) {
     if (value.length === 0) continue;
-    // console.log(productVariants);
     const variant = productVariants.find((pv) => {
       let id = pv._id.toString();
       return id === value[0].id.toString();
     });
-    // console.log(variant);
     if (variant) {
       doc.setFontSize(12);
       doc.text(
@@ -254,7 +252,6 @@ export async function GET(request: NextRequest) {
       allProductVariants,
     ]);
 
-    console.log(orders, productVariants);
 
     // const response = NextResponse.json(
     //   {

@@ -376,7 +376,5 @@ export function generateInvoice(
     align: "left",
   });
 
-  console.log("Saving pdf");
-
   return doc;
 }

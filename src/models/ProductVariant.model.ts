@@ -39,7 +39,6 @@ ProductVariantSchema.pre("find", function () {
 });
 
 ProductVariantSchema.pre("findOneAndDelete", function () {
-  console.log("pre findOneAndDelete for ProductVariant");
   // delete all product variants having this product variant id
   const product_variant_id = this.getQuery()["_id"];
   const Order = mongoose.model("Order");

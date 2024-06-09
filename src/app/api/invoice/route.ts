@@ -35,7 +35,6 @@ export async function POST(request: NextRequest) {
       throw new Error("All fields are required");
     }
 
-    console.log(body);
 
     await connectDB();
     const items: {
@@ -137,7 +136,6 @@ export async function POST(request: NextRequest) {
     const invoiceDetails = `Invoice ID: ${invoiceId}\nInvoice Date: ${invoiceDate}`;
     const companyDetails = `Name: ${session.user.name}\nEmail: ${session.user.email}\n\nPhone${session.user.phone}`;
     const client = await Client.findById(clientId);
-    console.log(client);
 
     const clientDetails = `Name: ${client.name}\nReg. Address: ${client.registration_address}\n\nGST No: ${client.gst_no}`;
     const clientBillingDetails = `${client.billing_address}`;

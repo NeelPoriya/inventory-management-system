@@ -255,7 +255,6 @@ async function getQuantityInformation(
   await connectDB();
 
   let model = Order;
-  console.log(chalk.red(name));
   // if (name === "incoming") {
   //   model = Incoming;
   // } else if (name === "outgoing") {

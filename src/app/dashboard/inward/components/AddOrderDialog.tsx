@@ -113,7 +113,6 @@ export default function AddOrderDialog({
 
   const handleSubmit = async (e: any) => {
     try {
-      // console.log(order);
       const response = await fetch("/api/info/order", {
         method: "POST",
         body: JSON.stringify({

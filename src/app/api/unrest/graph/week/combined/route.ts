@@ -71,8 +71,6 @@ export async function GET(request: NextRequest) {
       },
     ]);
 
-    console.log(incomingItems);
-
     // Build the aggregation pipeline
     const outgoingItems = await Order.aggregate([
       // Match documents for the current week
