@@ -20,7 +20,7 @@ export default function OrderList({
 }) {
   const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery({
     queryKey: ["dashboard-order"],
-    queryFn: () => getFormattedOrder({ pageParam: 0, orderType }),
+    queryFn: ({ pageParam }) => getFormattedOrder({ pageParam, orderType }),
     getNextPageParam: (lastPage) => {
       if (!lastPage || !lastPage.items.metadata || !lastPage.items.metadata[0])
         return null;
